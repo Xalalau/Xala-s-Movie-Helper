@@ -646,12 +646,10 @@ local function Defaults()
 
     for k,_ in pairs(xmh_commands) do
         if mark_clear[xmh_commands[k].category] == 1 then -- Is the category marked for cleaning?
-            if (xmh_commands[k].cheat == true and GetConVar("sv_cheats"):GetInt() == 1) or xmh_commands[k].cheat == false then -- Is the cheats sittuation ok?
-                if (xmh_commands[k].admin == true and checkAdmin() == true) or xmh_commands[k].admin == false then -- Is admin or user ok?
-                    current_value = tonumber(string.format("%.2f", GetConVar(k):GetFloat())) -- Getting the value...
-                    if (xmh_commands[k].default != current_value) then -- Are the values different?
-                        RunConsoleCommand (k, tostring(xmh_commands[k].default))
-                    end
+            if (xmh_commands[k].admin == true and checkAdmin() == true) or xmh_commands[k].admin == false then -- Is admin or user ok?
+                current_value = tonumber(string.format("%.2f", GetConVar(k):GetFloat())) -- Getting the value...
+                if (xmh_commands[k].default != current_value) then -- Are the values different?
+                    RunConsoleCommand (k, tostring(xmh_commands[k].default))
                 end
             end
         end

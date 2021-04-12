@@ -1,2 +1,0 @@
-- Check if all options are reseting
-- Try again to hide the physgun glow when it's set to invisible 

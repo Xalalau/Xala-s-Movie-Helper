@@ -15,7 +15,7 @@ resource.AddFile("materials/skybox/backupup.vmt")
 resource.AddFile("materials/skybox/green.vmt")
 
 -- Language
-local LANG = ""
+_LANG = GetConVarString('gmod_language')
 include("xmh/language.lua" )
 
 if SERVER then

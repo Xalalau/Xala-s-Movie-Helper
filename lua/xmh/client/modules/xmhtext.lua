@@ -139,7 +139,7 @@ end
 -- ---------------
 function XMHPANEL:LoadText()
     if not ( file.Exists( xmh_text_file, "DATA" ) ) then
-        self.TextEntry:SetValue( XMH_LANG[LANG]["xmhtext_initial_text"] )
+        self.TextEntry:SetValue( XMH_LANG[_LANG]["xmhtext_initial_text"] )
     else
         window.text = file.Read( xmh_text_file, "DATA" )
         self.TextEntry:SetValue( window.text )
@@ -175,7 +175,7 @@ function XMHPANEL:SetScroll()
             if not ( timer.Exists( "BadAutoScroll" ) ) then
                 local counting = 5
                 timer.Create("Warning",1,5,function()
-                    self:SetTitle( xmh_module_title .. XMH_LANG[LANG]["xmhtext_warning_reload"] .. counting )
+                    self:SetTitle( xmh_module_title .. XMH_LANG[_LANG]["xmhtext_warning_reload"] .. counting )
                     counting = counting - 1
                 end)
                 timer.Create("BadAutoScroll",6,1,function()
@@ -203,7 +203,7 @@ function XMHPANEL:SaveText()
     if ( window.text != text2 ) then
         file.Write( xmh_text_file, text2 )
         if ( window.saving_msg ) then
-            self:SetTitle( xmh_module_title .. XMH_LANG[LANG]["xmhtext_saving"] )
+            self:SetTitle( xmh_module_title .. XMH_LANG[_LANG]["xmhtext_saving"] )
             timer.Create( "SaveMsgRestore", 1, 1, function()
                 self:SetTitle( xmh_module_title )
             end)

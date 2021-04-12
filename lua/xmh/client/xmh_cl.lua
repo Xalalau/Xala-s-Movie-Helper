@@ -300,6 +300,7 @@ function XMH_GreenSkybox(skybox_bool)
 end
 
 -- Removes toolgun effects
+-- Note: Garry added gmod_drawtooleffects later, but I'm not going to touch it
 function XMH_ToolGunEffect(toolgun_bool)
     local GModToolgunMat = {
         Material("effects/select_ring"),

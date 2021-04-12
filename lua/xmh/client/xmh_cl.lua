@@ -188,7 +188,7 @@ CreateClientConVar("xmh_timescale_var"         ,1   ,false,false) -- Server
 CreateClientConVar("xmh_wfriction_var"         ,8   ,false,false) -- Server
 CreateClientConVar("xmh_weapammitem_var"       ,1   ,false,false) --   Client
 CreateClientConVar("xmh_error_var"             ,1   ,false,false) --   Client
-CreateClientConVar("xmh_fov_var"               ,0   ,false,false) --   Client
+CreateClientConVar("xmh_fov_var"               ,90  ,false,false) --   Client
 CreateClientConVar("xmh_viewmodel_var"         ,1   ,false,false) --   Client
 CreateClientConVar("xmh_clcleanup_var"         ,1   ,false,false) --   Client
 CreateClientConVar("xmh_cldisplay_var"         ,1   ,false,false) --   Client
@@ -203,7 +203,7 @@ CreateClientConVar("xmh_checkuncheck_var"      ,1   ,false,false) --   Client
 CreateClientConVar("xmh_editallweapons_var"    ,0   ,false,false) --   Client
 CreateClientConVar("xmh_editweaponsallplys_var",0   ,false,false) -- Server
 CreateClientConVar("xmh_defaultsall_var"       ,0   ,false,false) --   Client
-CreateClientConVar("xmh_camera_fov"            ,0   ,false,false) --   Client
+CreateClientConVar("xmh_camera_fov"            ,90  ,false,false) --   Client
 
 CreateClientConVar("xmh_make_invisibility_admin_only_var",0,false,false) -- Server (Special cvar only option)
 CreateClientConVar("xmh_positionname_var" ,XMH_LANG[_LANG]["client_var_teleport"],false,false) -- Client
@@ -778,20 +778,60 @@ timer.Create("Sync",0.50,0,function()
                 end
             end
         end
-
-        -- Special: cameras FOV
-        if (LocalPlayer():GetViewEntity():GetClass() == "gmod_cameraprop") then
-            if (GetConVar("xmh_camera_fov"):GetInt() != LocalPlayer():GetFOV()) then
-                RunConsoleCommand("fov", GetConVar("xmh_camera_fov"):GetInt())
-            end
-        else
-            if (GetConVar("xmh_fov_var"):GetInt() != LocalPlayer():GetFOV()) then
-                RunConsoleCommand("fov", GetConVar("xmh_fov_var"):GetInt())
-            end
-        end
     end
 end)
 
+-- Force the FOV to stay as it should
+hook.Add("CalcView", "StartFOVSync", function(ply, origin, angles, fov, znear, zfar)
+    local view = {}
+
+    -- --------------------------------------------------- Start
+    -- Code from GMod (https://github.com/Facepunch/garrysmod/blob/b7da4993e8fbee1789eee4cded85114849d17699/garrysmod/gamemodes/base/gamemode/cl_init.lua#L547)
+    -- first person ragdolling
+    if ply:Team() == TEAM_SPEC and ply:GetObserverMode() == OBS_MODE_IN_EYE then
+        local tgt = ply:GetObserverTarget()
+        if IsValid(tgt) and (not tgt:IsPlayer()) then
+        -- assume if we are in_eye and not speccing a player, we spec a ragdoll
+        local eyes = tgt:LookupAttachment("eyes") or 0
+        eyes = tgt:GetAttachment(eyes)
+        if eyes then
+            view.origin = eyes.Pos
+            view.angles = eyes.Ang
+        end
+        end
+    end
+
+    local wep = ply:GetActiveWeapon()
+    if IsValid(wep) then
+       local func = wep.CalcView
+       if func then
+          view.origin, view.angles, view.fov = func( wep, ply, origin*1, angles*1, fov )
+       end
+    end
+    -- --------------------------------------------------- End
+
+     -- Our FOV
+    if not view.fov then
+        -- Cameras
+        if (LocalPlayer():GetViewEntity():GetClass() == "gmod_cameraprop") then
+            if (GetConVar("xmh_camera_fov"):GetInt() != LocalPlayer():GetFOV()) then
+                view.fov = GetConVar("xmh_camera_fov"):GetInt()
+            end
+        -- Player
+        else
+            if (GetConVar("xmh_fov_var"):GetInt() != LocalPlayer():GetFOV()) then
+                view.fov = GetConVar("xmh_fov_var"):GetInt()
+            end
+        end
+    end
+
+    return view
+end)
+
+-- Avoid calling LocalPlayer() until all entities are loaded
+hook.Add("InitPostEntity", "StartSync", function()
+	xmh_enable_localplayer = 1
+end)
 
 ----------------------------
 -- Console commands
@@ -820,15 +860,6 @@ concommand.Add("xmh_removesecondaryammo", RemoveSecondaryAmmo)
 concommand.Add("xmh_givegmweapons"      , GiveGModWeapons    )
 concommand.Add("xmh_givehl2weapons"     , GiveHL2Weapons     )
 concommand.Add("xmh_clearweaponsitems"  , ClearWeaponsItems  )
-
-----------------------------
--- Hooks
-----------------------------
-
--- Avoid calling LocalPlayer() until all entities are loaded
-hook.Add( "InitPostEntity", "some_unique_name", function()
-	xmh_enable_localplayer = 1
-end )
 
 ----------------------------
 -- Panel
@@ -991,11 +1022,11 @@ local function General(Panel)
     xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_general_lod_desc"     ])
     xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_general_pupil"        ], "r_eyesize", -0.5, 0.5, 2)
     xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_general_pupil_desc"   ])
-    xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_general_fov"          ], "xmh_fov_var", 0, 90, 0)
+    xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_general_fov"          ], "xmh_fov_var", 1, 359, 0)
     xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_general_fov_desc"     ])
     xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_general_vfov"         ], "viewmodel_fov", 0, 360, 0)
     xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_general_vfov_desc"    ])
-    xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_general_cfov"         ], "xmh_camera_fov", 0, 90, 0)
+    xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_general_cfov"         ], "xmh_camera_fov", 1, 359, 0)
     xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_general_cfov_desc"    ])
 end
 

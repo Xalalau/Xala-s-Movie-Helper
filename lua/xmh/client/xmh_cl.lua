@@ -648,6 +648,9 @@ local function Defaults()
         if mark_clear[xmh_commands[k].category] == 1 then -- Is the category marked for cleaning?
             if (xmh_commands[k].admin == true and checkAdmin() == true) or xmh_commands[k].admin == false then -- Is admin or user ok?
                 current_value = tonumber(string.format("%.2f", GetConVar(k):GetFloat())) -- Getting the value...
+                if k == "r_drawviewmodel" then
+                    print("r_drawviewmodel", current_value, xmh_commands[k].default)
+                end
                 if (xmh_commands[k].default != current_value) then -- Are the values different?
                     RunConsoleCommand (k, tostring(xmh_commands[k].default))
                 end
@@ -863,7 +866,34 @@ concommand.Add("xmh_clearweaponsitems"  , ClearWeaponsItems  )
 -- Panel
 ----------------------------
 
-function Informations(Panel)
+local xmh_menu
+local sv_cheats_menus = {}
+
+local function UpdateSVCheatsMenus(panelName)
+    local sv_cheats = GetConVar("sv_cheats"):GetInt() == 1 and true or false
+    local cheat_menus_enabled = sv_cheats_menus[panelName][1]:IsEnabled() and true or false
+
+    if sv_cheats and not cheat_menus_enabled or not sv_cheats and cheat_menus_enabled then
+        for k,v in ipairs(sv_cheats_menus[panelName]) do
+            print(v)
+            v:SetEnabled(sv_cheats)
+        end
+    end
+end
+
+local function SetSVCheatsMenus(pnl)
+    local panelName = tostring(pnl)
+    sv_cheats_menus[panelName] = {}
+    local sv_cheats_menu = sv_cheats_menus[panelName]
+
+    function pnl:Paint()
+        UpdateSVCheatsMenus(panelName)
+    end
+
+    return sv_cheats_menu
+end
+
+local function Informations(Panel)
     Panel:Help            ("Xala's Movie Helper"                             )
     if checkAdmin() == true then
         Panel:ControlHelp (XMH_LANG[_LANG]["client_menu_info_admin_on"       ])
@@ -896,14 +926,15 @@ function Informations(Panel)
     Panel:ControlHelp     (XMH_LANG[_LANG]["client_menu_info_credits"        ])
 end
 
-local xmh_menu
-
 local function Cleanup(Panel)
+    local sv_cheats_menu = SetSVCheatsMenus(Panel.Header)
+
     if checkAdmin() == true then
         xmh_menu = Panel:Button (XMH_LANG[_LANG]["client_menu_cleanup_corpses"         ], "xmh_clearcorpses")
         xmh_menu:SetTooltip     (XMH_LANG[_LANG]["client_menu_cleanup_corpses_desc"    ])
     end
     xmh_menu = Panel:Button (XMH_LANG[_LANG]["client_menu_cleanup_decals"          ], "xmh_cleardecals")
+    table.insert(sv_cheats_menu, xmh_menu)
     xmh_menu:SetTooltip     (XMH_LANG[_LANG]["client_menu_cleanup_decals_desc"     ])
     xmh_menu = Panel:Button (XMH_LANG[_LANG]["client_menu_cleanup_decalsmodel"     ], "cl_removedecals")
     xmh_menu:SetTooltip     (XMH_LANG[_LANG]["client_menu_cleanup_decalsmodel_desc"])
@@ -920,11 +951,16 @@ local function Cleanup(Panel)
 end
 
 local function HideOrShow(Panel)
+    local sv_cheats_menu = SetSVCheatsMenus(Panel.Header)
+
     xmh_menu = Panel:Button   (XMH_LANG[_LANG]["client_menu_hideshow_crosshair"        ], "xmh_crosshair")
+    table.insert(sv_cheats_menu, xmh_menu)
     xmh_menu:SetTooltip       (XMH_LANG[_LANG]["client_menu_hideshow_crosshair_desc"   ]                 )
     xmh_menu = Panel:CheckBox (XMH_LANG[_LANG]["client_menu_hideshow_wvmodels"         ], "xmh_viewmodel_var")
+    table.insert(sv_cheats_menu, xmh_menu)
     xmh_menu:SetTooltip       (XMH_LANG[_LANG]["client_menu_hideshow_wvmodels_desc"    ])
     xmh_menu = Panel:CheckBox (XMH_LANG[_LANG]["client_menu_hideshow_vmodels"          ], "r_drawviewmodel")
+    table.insert(sv_cheats_menu, xmh_menu)
     xmh_menu:SetTooltip       (XMH_LANG[_LANG]["client_menu_hideshow_vmodels_desc"     ])
     xmh_menu = Panel:CheckBox (XMH_LANG[_LANG]["client_menu_hideshow_invisible"        ], "xmh_invisible_var")
     xmh_menu:SetTooltip       (XMH_LANG[_LANG]["client_menu_hideshow_invisible_desc"   ])
@@ -949,24 +985,30 @@ local function HideOrShow(Panel)
     if checkAdmin() == true then
         if not game.SinglePlayer() then
             xmh_menu = Panel:CheckBox (XMH_LANG[_LANG]["client_menu_hideshow_voicei"           ], "xmh_voiceicons_var")
+            table.insert(sv_cheats_menu, xmh_menu)
             xmh_menu:SetTooltip       (XMH_LANG[_LANG]["client_menu_hideshow_voicei_desc"      ])
         end
         xmh_menu = Panel:CheckBox (XMH_LANG[_LANG]["client_menu_hideshow_foot"             ], "xmh_footsteps_var")
+        table.insert(sv_cheats_menu, xmh_menu)
         xmh_menu:SetTooltip       (XMH_LANG[_LANG]["client_menu_hideshow_foot_desc"        ])
     end
     xmh_menu = Panel:CheckBox (XMH_LANG[_LANG]["client_menu_hideshow_decmod"           ], "r_drawmodeldecals")
     xmh_menu:SetTooltip       (XMH_LANG[_LANG]["client_menu_hideshow_decmod_desc"      ])
     xmh_menu = Panel:CheckBox (XMH_LANG[_LANG]["client_menu_hideshow_particles"        ], "r_drawparticles")
+    table.insert(sv_cheats_menu, xmh_menu)
     xmh_menu:SetTooltip       (XMH_LANG[_LANG]["client_menu_hideshow_particles_desc"   ])
     xmh_menu = Panel:CheckBox (XMH_LANG[_LANG]["client_menu_hideshow_3dskybox"         ], "r_3dsky")
     xmh_menu:SetTooltip       (XMH_LANG[_LANG]["client_menu_hideshow_3dskybox_desc"    ])
     xmh_menu = Panel:CheckBox (XMH_LANG[_LANG]["client_menu_hideshow_water"            ], "cl_show_splashes")
     xmh_menu:SetTooltip       (XMH_LANG[_LANG]["client_menu_hideshow_water_desc"       ])
     xmh_menu = Panel:CheckBox (XMH_LANG[_LANG]["client_menu_hideshow_ropes"            ], "r_drawropes")
+    table.insert(sv_cheats_menu, xmh_menu)
     xmh_menu:SetTooltip       (XMH_LANG[_LANG]["client_menu_hideshow_ropes_desc"       ])
     xmh_menu = Panel:CheckBox (XMH_LANG[_LANG]["client_menu_hideshow_laser"            ], "r_DrawBeams")
+    table.insert(sv_cheats_menu, xmh_menu)
     xmh_menu:SetTooltip       (XMH_LANG[_LANG]["client_menu_hideshow_laser_desc"       ])
     xmh_menu = Panel:CheckBox (XMH_LANG[_LANG]["client_menu_hideshow_ents"             ], "r_drawentities")
+    table.insert(sv_cheats_menu, xmh_menu)
     xmh_menu:SetTooltip       (XMH_LANG[_LANG]["client_menu_hideshow_ents_desc"        ])
     if checkAdmin() == true then
         xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_hideshow_corpses"          ], "xmh_corpses_var", 0, 200, 0)
@@ -983,30 +1025,41 @@ local function HideOrShow(Panel)
 end
 
 local function Flashlight(Panel)
+    local sv_cheats_menu = SetSVCheatsMenus(Panel.Header)
+
     xmh_menu = Panel:CheckBox  (XMH_LANG[_LANG]["client_menu_flashlight_lock"           ], "r_flashlightlockposition")
+    table.insert(sv_cheats_menu, xmh_menu)
     xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_flashlight_lock_desc"      ])
     xmh_menu = Panel:CheckBox  (XMH_LANG[_LANG]["client_menu_flashlight_brightness"     ], "xmh_fullflashlight_var")
+    table.insert(sv_cheats_menu, xmh_menu)
     xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_flashlight_brightness_desc"])
     xmh_menu = Panel:CheckBox  (XMH_LANG[_LANG]["client_menu_flashlight_area"           ], "r_flashlightdrawfrustum")
     xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_flashlight_area_desc"      ])
     xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_flashlight_minr"           ], "r_flashlightnear", 1, 1000, 0)
+    table.insert(sv_cheats_menu, xmh_menu)
     xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_flashlight_minr_desc"      ])
     xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_flashlight_maxr"           ], "r_flashlightfar", 1, 10000, 0)
+    table.insert(sv_cheats_menu, xmh_menu)
     xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_flashlight_maxr_desc"      ])
     xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_flashlight_fov"            ], "r_flashlightfov", 1, 179, 0)
+    table.insert(sv_cheats_menu, xmh_menu)
     xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_flashlight_fov_desc"       ])
 end
 
 local function General(Panel)
+    local sv_cheats_menu = SetSVCheatsMenus(Panel.Header)
+
     xmh_menu = Panel:Button    (XMH_LANG[_LANG]["client_menu_general_editor"       ], "xmh_texteditor")
     xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_general_editor_desc"  ])
     xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_general_fontsize"     ], "xmh_textfont_var", 13, 30, 0)
     xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_general_fontsize_desc"])
     if not game.SinglePlayer() then
         xmh_menu = Panel:Button (XMH_LANG[_LANG]["client_menu_general_lipsync"      ], "xmh_lipsync")
+        table.insert(sv_cheats_menu, xmh_menu)
         xmh_menu:SetTooltip     (XMH_LANG[_LANG]["client_menu_general_lipsync_desc" ])
     end
     xmh_menu = Panel:CheckBox (XMH_LANG[_LANG]["client_menu_general_shake"        ], "xmh_shake_var")
+    table.insert(sv_cheats_menu, xmh_menu)
     xmh_menu:SetTooltip       (XMH_LANG[_LANG]["client_menu_general_shake_desc"   ])
     if (GetConVar("sv_skyname"):GetString() != "painted") then
         xmh_menu = Panel:CheckBox (XMH_LANG[_LANG]["client_menu_general_green"        ], "xmh_skybox_var")
@@ -1021,20 +1074,28 @@ local function General(Panel)
     xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_general_pupil"        ], "r_eyesize", -0.5, 0.5, 2)
     xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_general_pupil_desc"   ])
     xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_general_fov"          ], "xmh_fov_var", 1, 359, 0)
+    table.insert(sv_cheats_menu, xmh_menu)
     xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_general_fov_desc"     ])
     xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_general_vfov"         ], "viewmodel_fov", 0, 360, 0)
+    table.insert(sv_cheats_menu, xmh_menu)
     xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_general_vfov_desc"    ])
     xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_general_cfov"         ], "xmh_camera_fov", 1, 359, 0)
+    table.insert(sv_cheats_menu, xmh_menu)
     xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_general_cfov_desc"    ])
 end
 
 local function NPCMovement(Panel)
+    local sv_cheats_menu = SetSVCheatsMenus(Panel.Header)
+
     xmh_menu = Panel:Button (XMH_LANG[_LANG]["client_menu_npcmov_select"             ], "npc_select")
+    table.insert(sv_cheats_menu, xmh_menu)
     xmh_menu:SetTooltip     (XMH_LANG[_LANG]["client_menu_npcmov_select_desc"        ])
     xmh_menu = Panel:Button (XMH_LANG[_LANG]["client_menu_npcmov_move"               ], "npc_go")
+    table.insert(sv_cheats_menu, xmh_menu)
     xmh_menu:SetTooltip     (XMH_LANG[_LANG]["client_menu_npcmov_move_desc"          ])
     if checkAdmin() == true then
         xmh_menu = Panel:CheckBox (XMH_LANG[_LANG]["client_menu_npcmov_run"                ], "xmh_npcwalkrun_var") -- Bug: npc_go_do_run allways returns 1...
+        table.insert(sv_cheats_menu, xmh_menu)
         xmh_menu:SetTooltip       (XMH_LANG[_LANG]["client_menu_npcmov_run_desc"           ])
     end
     xmh_menu = Panel:Button (XMH_LANG[_LANG]["client_menu_npcmov_random"             ], "npc_go_random")
@@ -1047,8 +1108,10 @@ local function NPCMovement(Panel)
     if checkAdmin() == true then
         Panel:Help                (XMH_LANG[_LANG]["client_menu_npcmov_mov_msg"            ])
         xmh_menu = Panel:CheckBox (XMH_LANG[_LANG]["client_menu_npcmov_ai_disabled"        ], "xmh_aidisabled_var")
+        table.insert(sv_cheats_menu, xmh_menu)
         xmh_menu:SetTooltip       (XMH_LANG[_LANG]["client_menu_npcmov_ai_disabled_desc"   ])
         xmh_menu = Panel:CheckBox (XMH_LANG[_LANG]["client_menu_npcmov_ai_disable"         ], "xmh_aidisable_var")
+        table.insert(sv_cheats_menu, xmh_menu)
         xmh_menu:SetTooltip       (XMH_LANG[_LANG]["client_menu_npcmov_ai_disable_desc"    ])
     else
         Panel:Help(XMH_LANG[_LANG]["client_menu_npcmov_note"])
@@ -1056,22 +1119,30 @@ local function NPCMovement(Panel)
 end
 
 local function Physics(Panel)
+    local sv_cheats_menu = SetSVCheatsMenus(Panel.Header)
+
     if checkAdmin() == true then
         xmh_menu = Panel:CheckBox  (XMH_LANG[_LANG]["client_menu_physics_motion"       ], "xmh_mode_var")
+        table.insert(sv_cheats_menu, xmh_menu)
         xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_physics_motion_desc"  ])
         xmh_menu = Panel:CheckBox  (XMH_LANG[_LANG]["client_menu_physics_fall"         ], "xmh_falldamage_var")
+        table.insert(sv_cheats_menu, xmh_menu)
         xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_physics_fall_desc"    ])
         xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_physics_time"         ], "xmh_timescale_var", 0.06, 2.99, 2)
+        table.insert(sv_cheats_menu, xmh_menu)
         xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_physics_time_desc"    ])
         xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_physics_push"         ], "xmh_knockback_var", -9999, 9999, 0)
+        table.insert(sv_cheats_menu, xmh_menu)
         xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_physics_push_desc"    ])
     end
         xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_physics_pgunf"        ], "physgun_wheelspeed", 0, 100, 0)
         xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_physics_pgunf_desc"   ])
     if checkAdmin() == true then
         xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_physics_throw"        ], "xmh_throwforce_var", 0, 20000, 0)
+        table.insert(sv_cheats_menu, xmh_menu)
         xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_physics_throw_desc"   ])
         xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_physics_noclip"       ], "xmh_noclipspeed_var", 1, 300, 0)
+        table.insert(sv_cheats_menu, xmh_menu)
         xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_physics_noclip_desc"  ])
     end
         xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_physics_walk"         ], "xmh_walkspeed_var", 1, 10000, 0)
@@ -1087,6 +1158,8 @@ local function Physics(Panel)
 end
 
 local function Shadows(Panel)
+    local sv_cheats_menu = SetSVCheatsMenus(Panel.Header)
+
     local resolution = XMH_LANG[_LANG]["client_menu_shadows_res_p1"]..GetConVar("r_flashlightdepthres"):GetInt()..XMH_LANG[_LANG]["client_menu_shadows_res_p2"]
     xmh_menu = Panel:Button(XMH_LANG[_LANG]["client_menu_shadows_res_desc"       ], "xmh_shadowreschk")
     xmh_menu:SetTooltip(resolution)
@@ -1102,6 +1175,7 @@ local function Shadows(Panel)
     xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_shadows_blur"           ], "r_projectedtexture_filter", 0, 20, 0)
     xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_shadows_blur_desc"      ])
     xmh_menu = Panel:CheckBox  (XMH_LANG[_LANG]["client_menu_shadows_brightness"     ], "mat_fullbright")
+    table.insert(sv_cheats_menu, xmh_menu)
     xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_shadows_brightness_desc"])
     xmh_menu = Panel:CheckBox  (XMH_LANG[_LANG]["client_menu_shadows_match"          ], "r_shadowrendertotexture")
     xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_shadows_match_desc"     ])
@@ -1121,27 +1195,43 @@ local function Teleport(Panel)
 end
 
 local function ThirdPerson(Panel)
+    local sv_cheats_menu = SetSVCheatsMenus(Panel.Header)
+
     xmh_menu = Panel:CheckBox  (XMH_LANG[_LANG]["client_menu_thirdp_enable"            ], "xmh_person_var")
+    table.insert(sv_cheats_menu, xmh_menu)
     xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_thirdp_enable_desc"       ])
     xmh_menu = Panel:CheckBox  (XMH_LANG[_LANG]["client_menu_thirdp_info"              ], "cam_showangles")
+    table.insert(sv_cheats_menu, xmh_menu)
     xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_thirdp_info_desc"         ])
     xmh_menu = Panel:CheckBox  (XMH_LANG[_LANG]["client_menu_thirdp_colision"          ], "cam_collision")
+    table.insert(sv_cheats_menu, xmh_menu)
     xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_thirdp_colision_desc"     ])
     xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_thirdp_distance"          ], "cam_idealdist", 30, 200, 0)
+    table.insert(sv_cheats_menu, xmh_menu)
     xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_thirdp_distance_desc"     ])
     xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_thirdp_cam_downup"        ], "cam_idealdistup", -120, 120, 0)
+    table.insert(sv_cheats_menu, xmh_menu)
     xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_thirdp_cam_downup_desc"   ])
     xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_thirdp_cam_leftright"     ], "cam_idealdistright", -200, 200, 0)
+    table.insert(sv_cheats_menu, xmh_menu)
     xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_thirdp_cam_leftright_desc"])
     xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_thirdp_ang_downup"        ], "cam_idealpitch", 0, 90, 0)
+    table.insert(sv_cheats_menu, xmh_menu)
     xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_thirdp_ang_downup_desc"   ])
     xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_thirdp_and_leftright"     ], "cam_idealyaw", -135, 135, 0)
+    table.insert(sv_cheats_menu, xmh_menu)
     xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_thirdp_and_leftright_desc"])
     xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_thirdp_spinvel"           ], "cam_ideallag", 0, 6000, 0)
+    table.insert(sv_cheats_menu, xmh_menu)
     xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_thirdp_spinvel_desc"      ])
 end
 
 local function Weapons(Panel)
+    if checkAdmin() == true and not game.SinglePlayer() then
+        xmh_menu = Panel:CheckBox (XMH_LANG[_LANG]["client_menu_weapons_plyall"        ], "xmh_editweaponsallplys_var")
+        xmh_menu:SetTooltip       (XMH_LANG[_LANG]["client_menu_weapons_plyall_desc"   ])
+    end
+    Panel:Help                (""                                                  )
     xmh_menu = Panel:Button   (XMH_LANG[_LANG]["client_menu_weapons_drop"          ], "xmh_dropweapon")
     xmh_menu:SetTooltip       (XMH_LANG[_LANG]["client_menu_weapons_drop_desc"     ])
     xmh_menu = Panel:Button   (XMH_LANG[_LANG]["client_menu_weapons_remove"        ], "xmh_removeweapon")
@@ -1157,11 +1247,6 @@ local function Weapons(Panel)
     xmh_menu:SetTooltip       (XMH_LANG[_LANG]["client_menu_weapons_givegm_desc"   ])
     xmh_menu = Panel:Button   (XMH_LANG[_LANG]["client_menu_weapons_givehl2"       ], "xmh_givehl2weapons")
     xmh_menu:SetTooltip       (XMH_LANG[_LANG]["client_menu_weapons_givehl2_desc"  ])
-    Panel:Help                (""                                                  )
-    if checkAdmin() == true and not game.SinglePlayer() then
-        xmh_menu = Panel:CheckBox (XMH_LANG[_LANG]["client_menu_weapons_plyall"        ], "xmh_editweaponsallplys_var")
-        xmh_menu:SetTooltip       (XMH_LANG[_LANG]["client_menu_weapons_plyall_desc"   ])
-    end
 end
 
 local function Defaults(Panel)

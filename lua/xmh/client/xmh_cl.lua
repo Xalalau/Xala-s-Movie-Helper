@@ -642,14 +642,14 @@ local function Defaults()
         net.SendToServer (                            )
     end
 
-    local actual_value
+    local current_value
 
     for k,_ in pairs(xmh_commands) do
         if mark_clear[xmh_commands[k].category] == 1 then -- Is the category marked for cleaning?
             if (xmh_commands[k].cheat == true and GetConVar("sv_cheats"):GetInt() == 1) or xmh_commands[k].cheat == false then -- Is the cheats sittuation ok?
                 if (xmh_commands[k].admin == true and checkAdmin() == true) or xmh_commands[k].admin == false then -- Is admin or user ok?
-                    actual_value = tonumber(string.format("%.2f", GetConVar(k):GetFloat())) -- Getting the value...
-                    if (xmh_commands[k].default != actual_value) then -- Are the values different?
+                    current_value = tonumber(string.format("%.2f", GetConVar(k):GetFloat())) -- Getting the value...
+                    if (xmh_commands[k].default != current_value) then -- Are the values different?
                         RunConsoleCommand (k, tostring(xmh_commands[k].default))
                     end
                 end
@@ -728,7 +728,7 @@ end)
 -- This timer syncs our "xmh_" cvars with their menu states and applies the changes to the game
 timer.Create("Sync",0.50,0,function()
     if ( xmh_enable_localplayer == 1 ) then
-        local actual_value, prefix, var_type
+        local current_value, prefix, var_type
 
         AdminCheck()
 
@@ -738,40 +738,40 @@ timer.Create("Sync",0.50,0,function()
                 if xmh_commands[k].command_type != "runconsolecommand" then -- Is the type ok?
                     if (xmh_commands[k].cheat == true and GetConVar("sv_cheats"):GetInt() == 1) or xmh_commands[k].cheat == false then -- Is the cheats sittuation ok?
                         if (xmh_commands[k].admin == true and checkAdmin() == true) or xmh_commands[k].admin == false then -- Is admin or user ok?
-                            actual_value = tonumber(string.format("%.2f", GetConVar(k):GetFloat())) -- Getting the value...
-                            if (xmh_commands[k].value != actual_value) then -- Are the values different?
+                            current_value = tonumber(string.format("%.2f", GetConVar(k):GetFloat())) -- Getting the value...
+                            if (xmh_commands[k].value != current_value) then -- Are the values different?
                                 -- Yes = applying changes...
                                 if xmh_commands[k].command_type == "net" then
                                     if xmh_commands[k].var_type == "int2" then
                                         net.Start       (xmh_commands[k].func)
                                         net.WriteString (k                   )
-                                        net.WriteInt    (actual_value, 2     )
+                                        net.WriteInt    (current_value, 2     )
                                         net.SendToServer(                    )
                                     elseif xmh_commands[k].var_type == "int16" then
                                         net.Start       (xmh_commands[k].func)
                                         net.WriteString (k                   )
-                                        net.WriteInt    (actual_value, 16    )
+                                        net.WriteInt    (current_value, 16    )
                                         net.SendToServer(                    )
                                     elseif xmh_commands[k].var_type == "float" then
                                         net.Start       (xmh_commands[k].func)
                                         net.WriteString (k                   )
-                                        net.WriteFloat  (actual_value        )
+                                        net.WriteFloat  (current_value        )
                                         net.SendToServer(                    )
                                     end
                                 elseif xmh_commands[k].command_type == "function" then
                                     if xmh_commands[k].sub_type == nil then
                                         if xmh_commands[k].category == "Defaults" then
-                                            SetSectionsToReset(xmh_commands[k].value2, actual_value)
+                                            SetSectionsToReset(xmh_commands[k].value2, current_value)
                                         else
-                                        xmh_commands[k].func(actual_value, k)
+                                        xmh_commands[k].func(current_value, k)
                                         end
                                     elseif xmh_commands[k].sub_type == "fix" then
-                                        xmh_commands[k].func(xmh_commands[k].real_command, actual_value)
+                                        xmh_commands[k].func(xmh_commands[k].real_command, current_value)
                                     end
                                 elseif xmh_commands[k].command_type == "hook" then
-                                    xmh_commands[k].func(xmh_commands[k].value2, actual_value)
+                                    xmh_commands[k].func(xmh_commands[k].value2, current_value)
                                 end
-                                xmh_commands[k].value = actual_value -- Setting the auxiliar commands[k].value var...
+                                xmh_commands[k].value = current_value -- Setting the auxiliar commands[k].value var...
                             end
                         end
                     end

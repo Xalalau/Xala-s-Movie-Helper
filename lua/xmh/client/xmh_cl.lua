@@ -188,7 +188,7 @@ CreateClientConVar("xmh_timescale_var"         ,1   ,false,false) -- Server
 CreateClientConVar("xmh_wfriction_var"         ,8   ,false,false) -- Server
 CreateClientConVar("xmh_weapammitem_var"       ,1   ,false,false) --   Client
 CreateClientConVar("xmh_error_var"             ,1   ,false,false) --   Client
-CreateClientConVar("xmh_fov_var"               ,90  ,false,false) --   Client
+CreateClientConVar("xmh_fov_var"               ,100 ,false,false) --   Client
 CreateClientConVar("xmh_viewmodel_var"         ,1   ,false,false) --   Client
 CreateClientConVar("xmh_clcleanup_var"         ,1   ,false,false) --   Client
 CreateClientConVar("xmh_cldisplay_var"         ,1   ,false,false) --   Client
@@ -203,7 +203,7 @@ CreateClientConVar("xmh_checkuncheck_var"      ,1   ,false,false) --   Client
 CreateClientConVar("xmh_editallweapons_var"    ,0   ,false,false) --   Client
 CreateClientConVar("xmh_editweaponsallplys_var",0   ,false,false) -- Server
 CreateClientConVar("xmh_defaultsall_var"       ,0   ,false,false) --   Client
-CreateClientConVar("xmh_camera_fov"            ,90  ,false,false) --   Client
+CreateClientConVar("xmh_camera_fov"            ,100 ,false,false) --   Client
 
 CreateClientConVar("xmh_make_invisibility_admin_only_var",0,false,false) -- Server (Special cvar only option)
 CreateClientConVar("xmh_positionname_var" ,XMH_LANG[_LANG]["client_var_teleport"],false,false) -- Client
@@ -786,45 +786,60 @@ end)
 
 -- Force the FOV to stay as it should
 hook.Add("CalcView", "StartFOVSync", function(ply, origin, angles, fov, znear, zfar)
-    local view = {}
+    -- Most of this code was imported from GMod (https://github.com/Facepunch/garrysmod/blob/b7da4993e8fbee1789eee4cded85114849d17699/garrysmod/gamemodes/base/gamemode/cl_init.lua#L347)
+	local Vehicle	= ply:GetVehicle()
+	local Weapon	= ply:GetActiveWeapon()
 
-    -- --------------------------------------------------- Start
-    -- Code from GMod (https://github.com/Facepunch/garrysmod/blob/b7da4993e8fbee1789eee4cded85114849d17699/garrysmod/gamemodes/base/gamemode/cl_init.lua#L547)
-    -- first person ragdolling
-    if ply:Team() == TEAM_SPEC and ply:GetObserverMode() == OBS_MODE_IN_EYE then
-        local tgt = ply:GetObserverTarget()
-        if IsValid(tgt) and (not tgt:IsPlayer()) then
-        -- assume if we are in_eye and not speccing a player, we spec a ragdoll
-        local eyes = tgt:LookupAttachment("eyes") or 0
-        eyes = tgt:GetAttachment(eyes)
-        if eyes then
-            view.origin = eyes.Pos
-            view.angles = eyes.Ang
-        end
-        end
+	local view = {
+		["origin"] = origin,
+		["angles"] = angles,
+		["fov"] = fov,
+		["znear"] = znear,
+		["zfar"] = zfar,
+		["drawviewer"] = false,
+	}
+
+	--
+    -- Give the active view entity a go at changing the view
+	--
+    if ply:GetViewEntity().CalcView then
+        return ply:GetViewEntity():CalcView(ply, origin, angles, fov, znear, zfar)
     end
 
-    local wep = ply:GetActiveWeapon()
-    if IsValid(wep) then
-       local func = wep.CalcView
-       if func then
-          view.origin, view.angles, view.fov = func( wep, ply, origin*1, angles*1, fov )
-       end
-    end
-    -- --------------------------------------------------- End
+	--
+	-- Let the vehicle override the view and allows the vehicle view to be hooked
+	--
+	if ( IsValid( Vehicle ) ) then return hook.Run( "CalcVehicleView", Vehicle, ply, view ) end
+
+	--
+	-- Let drive possibly alter the view
+	--
+	if ( drive.CalcView( ply, view ) ) then return view end
+
+	--
+	-- Give the player manager a turn at altering the view
+	--
+	player_manager.RunClass( ply, "CalcView", view )
+
+	-- Give the active weapon a go at changing the view
+	if ( IsValid( Weapon ) ) then
+
+		local func = Weapon.CalcView
+		if ( func ) then
+			local origin, angles, fov = func( Weapon, ply, Vector( view.origin ), Angle( view.angles ), view.fov ) -- Note: Constructor to copy the object so the child function can't edit it.
+			view.origin, view.angles, view.fov = origin or view.origin, angles or view.angles, fov or view.fov
+		end
+
+	end
 
      -- Our FOV
-    if not view.fov then
+    if not Weapon.CalcView and fov >= 75 and fov <= 100 then -- Hack: try to ""detect"" weapons with active zoom by modifying the fov only when it's in the range of the game's options menu.
         -- Cameras
-        if (LocalPlayer():GetViewEntity():GetClass() == "gmod_cameraprop") then
-            if (GetConVar("xmh_camera_fov"):GetInt() != LocalPlayer():GetFOV()) then
-                view.fov = GetConVar("xmh_camera_fov"):GetInt()
-            end
+        if (ply:GetViewEntity():GetClass() == "gmod_cameraprop") then
+            view.fov = GetConVar("xmh_camera_fov"):GetInt()
         -- Player
         else
-            if (GetConVar("xmh_fov_var"):GetInt() != LocalPlayer():GetFOV()) then
-                view.fov = GetConVar("xmh_fov_var"):GetInt()
-            end
+            view.fov = GetConVar("xmh_fov_var"):GetInt()
         end
     end
 

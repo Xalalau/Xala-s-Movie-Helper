@@ -106,6 +106,15 @@ local function isLanguageValid(language)
     return false
 end
 
+-- Changes missing translations to English
+local function checkLanguage(ply,_,_,language)
+    for k,v in pairs(XMH_LANG["en"]) do
+        if not XMH_LANG[language][k] then
+            XMH_LANG[language][k] = v
+        end
+    end
+end
+
 -- Loads the correct language
 local function loadDefaultLanguage()
     if !file.Exists(xmh_lang_file, "DATA") then
@@ -118,15 +127,6 @@ local function loadDefaultLanguage()
     end
     if _LANG != "en" then
         checkLanguage(_LANG)
-    end
-end
-
--- Changes missing translations to English
-local function checkLanguage(ply,_,_,language)
-    for k,v in pairs(XMH_LANG["en"]) do
-        if not XMH_LANG[language][k] then
-            XMH_LANG[language][k] = v
-        end
     end
 end
 

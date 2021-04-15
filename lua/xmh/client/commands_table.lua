@@ -268,6 +268,20 @@ xmh_commands = {
     cheat           = true,
     admin           = false
   },
+  ["r_lod"] = {
+    command_type    = "runconsolecommand",
+    category        = "Display",
+    default         = GetConVar("r_lod"):GetInt(),
+    cheat           = false,
+    admin           = false
+  },
+  ["r_eyesize"] = {
+    command_type    = "runconsolecommand",
+    category        = "Display",
+    default         = GetConVar("r_eyesize"):GetInt(),
+    cheat           = false,
+    admin           = false
+  },
   ["xmh_corpses_var"] = {
     command_type    = "net",
     category        = "Display",
@@ -362,15 +376,6 @@ xmh_commands = {
     cheat           = false,
     admin           = false
   },
-  ["xmh_shake_var"] = {
-    command_type    = "function",
-    category        = "General",
-    default         = GetConVar("xmh_shake_var"):GetInt(),
-    value           = GetConVar("xmh_shake_var"):GetInt(),
-    cheat           = true,
-    func            = XMH_Shake,
-    admin           = false
-  },
   ["xmh_skybox_var"] = {
     command_type    = "function",
     category        = "General",
@@ -388,45 +393,6 @@ xmh_commands = {
     cheat           = false,
     func            = XMH_AutoSave,
     admin           = true
-  },
-  ["r_lod"] = {
-    command_type    = "runconsolecommand",
-    category        = "General",
-    default         = GetConVar("r_lod"):GetInt(),
-    cheat           = false,
-    admin           = false
-  },
-  ["r_eyesize"] = {
-    command_type    = "runconsolecommand",
-    category        = "General",
-    default         = GetConVar("r_eyesize"):GetInt(),
-    cheat           = false,
-    admin           = false
-  },
-  ["xmh_fov_var"] = {
-    command_type    = "function",
-    sub_type        = "fix",
-    category        = "General",
-    real_command    = "fov",
-    default         = GetConVar("xmh_fov_var"):GetInt(),
-    value           = GetConVar("xmh_fov_var"):GetInt(),
-    cheat           = true,
-    func            = XMH_RunCommand,
-    admin           = false
-  },
-  ["viewmodel_fov"] = {
-    command_type    = "runconsolecommand",
-    category        = "General",
-    default         = GetConVar("viewmodel_fov"):GetInt(),
-    cheat           = true,
-    admin           = false
-  },
-  ["xmh_camera_fov"] = {
-    command_type    = "runconsolecommand",
-    category        = "General",
-    default         = GetConVar("xmh_camera_fov"):GetInt(),
-    cheat           = true,
-    admin           = false
   },
   -- ##################### NPC MOVEMENT
   ["xmh_npcwalkrun_var"] = {
@@ -596,7 +562,41 @@ xmh_commands = {
     cheat           = false,
     admin           = false
   },
-  -- ##################### THIRD PERSON
+  -- ##################### PLAYER VIEW
+  ["xmh_shake_var"] = {
+    command_type    = "function",
+    category        = "PlayerView",
+    default         = GetConVar("xmh_shake_var"):GetInt(),
+    value           = GetConVar("xmh_shake_var"):GetInt(),
+    cheat           = true,
+    func            = XMH_Shake,
+    admin           = false
+  },
+  ["xmh_fov_var"] = {
+    command_type    = "function",
+    sub_type        = "fix",
+    category        = "PlayerView",
+    real_command    = "fov",
+    default         = GetConVar("xmh_fov_var"):GetInt(),
+    value           = GetConVar("xmh_fov_var"):GetInt(),
+    cheat           = true,
+    func            = XMH_RunCommand,
+    admin           = false
+  },
+  ["viewmodel_fov"] = {
+    command_type    = "runconsolecommand",
+    category        = "PlayerView",
+    default         = GetConVar("viewmodel_fov"):GetInt(),
+    cheat           = true,
+    admin           = false
+  },
+  ["xmh_camera_fov"] = {
+    command_type    = "runconsolecommand",
+    category        = "PlayerView",
+    default         = GetConVar("xmh_camera_fov"):GetInt(),
+    cheat           = true,
+    admin           = false
+  },
   ["xmh_person_var"] = {
     command_type    = "function",
     category        = "PlayerView",

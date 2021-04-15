@@ -251,16 +251,57 @@ end
 
 -- Deletes a teleport point and refreshs the teleport_positions file
 local function DeleteTeleportPos()
-    local name = getComboBoxSelection(teleport_combobox)
-    if name == nil then
-        return
-    end
-    teleport_positions[name] = nil
-    teleport_combobox:Clear()
-    for k,v in pairs(teleport_positions) do
-        teleport_combobox:AddChoice(k)
-    end
-    file.Write(xmh_teleports_file, util.TableToJSON(teleport_positions))
+    local locationName = getComboBoxSelection(teleport_combobox)
+
+    if not locationName then return end
+
+    local qPanel = vgui.Create("DFrame")
+        qPanel:SetTitle("Deletion Confirmation")
+        qPanel:SetSize(285, 110)
+        qPanel:SetPos(10, 10)
+        qPanel:SetDeleteOnClose(true)
+        qPanel:SetVisible(true)
+        qPanel:SetDraggable(true)
+        qPanel:ShowCloseButton(true)
+        qPanel:MakePopup(true)
+        qPanel:Center()
+
+    local text = vgui.Create("DLabel", qPanel)
+        text:SetPos(40, 25)
+        text:SetSize(275, 25)
+        text:SetText("Are you sure you want to delete this location?")
+
+    local panel = vgui.Create("DPanel", qPanel)
+        panel:SetPos(5, 50)
+        panel:SetSize(275, 20)
+
+    local save = vgui.Create("DLabel", panel)
+        save:SetPos(10, -2)
+        save:SetSize(275, 25)
+        save:SetText(locationName)
+        save:SetTextColor(Color(0, 0, 0, 255))
+
+    local buttonYes = vgui.Create("DButton", qPanel)
+        buttonYes:SetPos(22, 75)
+        buttonYes:SetText("Yes")
+        buttonYes:SetSize(120, 30)
+        buttonYes.DoClick = function()
+            teleport_positions[locationName] = nil
+            teleport_combobox:Clear()
+            for k,v in pairs(teleport_positions) do
+                teleport_combobox:AddChoice(k)
+            end
+            file.Write(xmh_teleports_file, util.TableToJSON(teleport_positions))
+            qPanel:Close()
+        end
+
+    local buttonNo = vgui.Create("DButton", qPanel)
+        buttonNo:SetPos(146, 75)
+        buttonNo:SetText("No")
+        buttonNo:SetSize(120, 30)
+        buttonNo.DoClick = function()
+            qPanel:Close()
+        end
 end
 
 ----------------------------

@@ -1002,10 +1002,6 @@ local function HideShow(Panel)
     xmh_menu = Panel:CheckBox (XMH_LANG[_LANG]["client_menu_display_ents"             ], "r_drawentities")
     table.insert(sv_cheats_menu, xmh_menu)
     xmh_menu:SetTooltip       (XMH_LANG[_LANG]["client_menu_display_ents_desc"        ])
-    xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_general_lod"          ], "r_lod", -1, 5, 0)
-    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_general_lod_desc"     ])
-    xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_general_pupil"        ], "r_eyesize", -0.5, 0.5, 2)
-    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_general_pupil_desc"   ])
     if checkAdmin() == true then
         xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_display_corpses"          ], "xmh_corpses_var", 0, 200, 0)
         xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_display_corpses_desc"     ])
@@ -1062,6 +1058,10 @@ local function General(Panel)
         xmh_menu = Panel:CheckBox (XMH_LANG[_LANG]["client_menu_general_autosave"     ], "xmh_save_var")
         xmh_menu:SetTooltip       (XMH_LANG[_LANG]["client_menu_general_autosave_desc"])
     end
+    xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_general_lod"          ], "r_lod", -1, 5, 0)
+    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_general_lod_desc"     ])
+    xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_general_pupil"        ], "r_eyesize", -0.5, 0.5, 2)
+    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_general_pupil_desc"   ])
 end
 
 local function NPCMovement(Panel)

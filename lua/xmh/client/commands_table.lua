@@ -268,20 +268,6 @@ xmh_commands = {
     cheat           = true,
     admin           = false
   },
-  ["r_lod"] = {
-    command_type    = "runconsolecommand",
-    category        = "HideShow",
-    default         = GetConVar("r_lod"):GetInt(),
-    cheat           = false,
-    admin           = false
-  },
-  ["r_eyesize"] = {
-    command_type    = "runconsolecommand",
-    category        = "HideShow",
-    default         = GetConVar("r_eyesize"):GetInt(),
-    cheat           = false,
-    admin           = false
-  },
   ["xmh_corpses_var"] = {
     command_type    = "net",
     category        = "HideShow",
@@ -393,6 +379,20 @@ xmh_commands = {
     cheat           = false,
     func            = XMH_AutoSave,
     admin           = true
+  },
+  ["r_lod"] = {
+    command_type    = "runconsolecommand",
+    category        = "General",
+    default         = GetConVar("r_lod"):GetInt(),
+    cheat           = false,
+    admin           = false
+  },
+  ["r_eyesize"] = {
+    command_type    = "runconsolecommand",
+    category        = "General",
+    default         = GetConVar("r_eyesize"):GetInt(),
+    cheat           = false,
+    admin           = false
   },
   -- ##################### NPC MOVEMENT
   ["xmh_npcwalkrun_var"] = {

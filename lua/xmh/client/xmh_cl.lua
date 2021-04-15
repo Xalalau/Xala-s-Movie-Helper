@@ -649,9 +649,6 @@ local function Defaults()
             if (xmh_commands[k].cheat == true and GetConVar("sv_cheats"):GetInt() == 1) or xmh_commands[k].cheat == false then -- Is the cheats sittuation ok?
                 if (xmh_commands[k].admin == true and checkAdmin() == true) or xmh_commands[k].admin == false then -- Is admin or user ok?
                     current_value = tonumber(string.format("%.2f", GetConVar(k):GetFloat())) -- Getting the value...
-                    if k == "r_drawviewmodel" then
-                        print("r_drawviewmodel", current_value, xmh_commands[k].default)
-                    end
                     if (xmh_commands[k].default != current_value) then -- Are the values different?
                         RunConsoleCommand (k, tostring(xmh_commands[k].default))
                     end

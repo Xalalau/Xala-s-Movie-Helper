@@ -1,9 +1,10 @@
 ----------------------------
--- Global vars
+-- local vars
 ----------------------------
 
     local xmh_first_respawn = 1
     local xmh_func_breakable_table = { 0 }
+    local xmh_plys_respawn = {}
 
 -- ---------------------------
 -- "xmh_" cvars syncing table
@@ -130,6 +131,7 @@ util.AddNetworkString("XMH_PrintMessage"     )
 util.AddNetworkString("XMH_ToolGunMute"      )
 util.AddNetworkString("XMH_HandleWeapons"    )
 util.AddNetworkString("XMH_ClearWeaponsItems")
+util.AddNetworkString("XMH_SetRespawn"       )
 
 -- ---------------------------
 -- General Functions
@@ -591,6 +593,22 @@ net.Receive("XMH_ClearWeaponsItems",function(_,ply)
     end
 end)
 
+net.Receive("XMH_SetRespawn",function(_,ply)
+    local plyStr = tostring(ply)
+
+    if net.ReadBool() then
+        xmh_plys_respawn[plyStr] = nil
+
+        return
+    end
+
+    if not xmh_plys_respawn[plyStr] then
+        xmh_plys_respawn[plyStr] = {}
+    end
+
+    xmh_plys_respawn[plyStr].x, xmh_plys_respawn[plyStr].y = ply:GetPos()
+end)
+
 -- ---------------------------
 -- Hooks
 -- ---------------------------
@@ -613,6 +631,11 @@ hook.Add("PlayerSpawn", "PlayerSpawn_xmh", function(ply)
             net.WriteString(sync_table["xmh_invisibleall_var"][4]  )
             net.Send       (ply                                    )
         end
+    end
+
+    local plyStr = tostring(ply)
+    if xmh_plys_respawn[plyStr] then
+        ply:SetPos(xmh_plys_respawn[plyStr].x, xmh_plys_respawn[plyStr].y)
     end
 end)
 

@@ -304,6 +304,19 @@ local function DeleteTeleportPos()
         end
 end
 
+local function SetRespawnPoint()
+    LocalPlayer():PrintMessage(HUD_PRINTTALK, XMH_LANG[_LANG]["client_menu_teleport_set_msg"] .." (" .. tostring(LocalPlayer():GetPos()) .. ")")
+    net.Start("XMH_SetRespawn")
+    net.SendToServer()
+end
+
+local function UnsetRespawnPoint()
+    LocalPlayer():PrintMessage(HUD_PRINTTALK, XMH_LANG[_LANG]["client_menu_teleport_unset_msg"])
+    net.Start("XMH_SetRespawn")
+        net.WriteBool(true)
+    net.SendToServer()
+end
+
 ----------------------------
 -- Mixed panel functions
 ----------------------------
@@ -886,6 +899,8 @@ concommand.Add("xmh_checkuncheck"       , CheckUncheck       )
 concommand.Add("xmh_forcelanguage"      , forceLanguage      )
 concommand.Add("xmh_saveteleport"       , CreateTeleport     )
 concommand.Add("xmh_teleporttopos"      , TeleportToPos      )
+concommand.Add("xmh_setrespawnpoint"    , SetRespawnPoint    )
+concommand.Add("xmh_unsetrespawnpoint"  , UnsetRespawnPoint  )
 concommand.Add("xmh_deleteteleportpos"  , DeleteTeleportPos  )
 concommand.Add("xmh_dropweapon"         , DropWeapon         )
 concommand.Add("xmh_removeweapon"       , RemoveWeapon       )
@@ -1268,13 +1283,18 @@ local function Teleport(Panel)
     Panel:TextEntry         (XMH_LANG[_LANG]["client_menu_teleport_name"       ], "xmh_positionname_var")
     xmh_menu = Panel:Button (XMH_LANG[_LANG]["client_menu_teleport_save"       ], "xmh_saveteleport")
     xmh_menu:SetTooltip     (XMH_LANG[_LANG]["client_menu_teleport_save_desc"  ])
-    Panel:Help              (""                                                )
+    Panel:Help              ("")
     teleport_combobox = Panel:ComboBox(XMH_LANG[_LANG]["client_menu_teleport_destination"])
     LoadTeleports()
     xmh_menu = Panel:Button (XMH_LANG[_LANG]["client_menu_teleport_delete"     ], "xmh_deleteteleportpos")
     xmh_menu:SetTooltip     (XMH_LANG[_LANG]["client_menu_teleport_delete_desc"])
     xmh_menu = Panel:Button (XMH_LANG[_LANG]["client_menu_teleport_go"         ], "xmh_teleporttopos")
     xmh_menu:SetTooltip     (XMH_LANG[_LANG]["client_menu_teleport_go_desc"    ])
+    Panel:Help              ("")
+    xmh_menu = Panel:Button (XMH_LANG[_LANG]["client_menu_teleport_respawn"           ], "xmh_setrespawnpoint")
+    xmh_menu:SetTooltip     (XMH_LANG[_LANG]["client_menu_teleport_respawn_desc"      ])
+    xmh_menu = Panel:Button (XMH_LANG[_LANG]["client_menu_teleport_respawn_clear"     ], "xmh_unsetrespawnpoint")
+    xmh_menu:SetTooltip     (XMH_LANG[_LANG]["client_menu_teleport_respawn_clear_desc"])
 end
 
 local function Weapons(Panel)

@@ -868,7 +868,6 @@ local function UpdateSVCheatsMenus(panelName)
 
     if sv_cheats and not cheat_menus_enabled or not sv_cheats and cheat_menus_enabled then
         for k,v in ipairs(sv_cheats_menus[panelName]) do
-            print(v)
             v:SetEnabled(sv_cheats)
         end
     end

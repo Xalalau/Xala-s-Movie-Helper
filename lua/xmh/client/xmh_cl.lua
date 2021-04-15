@@ -20,7 +20,7 @@ local teleport_combobox
 local teleport_positions = {}
 local mark_clear = { -- Cleanup table
     ["Cleanup"] = 1,
-    ["Display"] = 1,
+    ["HideShow"] = 1,
     ["Flashlight"] = 1,
     ["General"] = 1,
     ["NPCMovement"] = 1,
@@ -632,7 +632,7 @@ local function Defaults()
     if ( GetConVar("xmh_defaultsall_var"):GetInt() == 1 ) then
         net.Start        ("XMH_DefaultsAll"           )
         net.WriteInt     (mark_clear["Cleanup"]    , 2)
-        net.WriteInt     (mark_clear["Display"]    , 2)
+        net.WriteInt     (mark_clear["HideShow"]    , 2)
         net.WriteInt     (mark_clear["Flashlight"] , 2)
         net.WriteInt     (mark_clear["General"]    , 2)
         net.WriteInt     (mark_clear["NPCMovement"], 2)
@@ -663,7 +663,7 @@ end
 net.Receive("XMH_DefaultsAll",function(_,ply)
     local backup = table.Copy(mark_clear)
     mark_clear["Cleanup"]     = net.ReadInt(2)
-    mark_clear["Display"]     = net.ReadInt(2)
+    mark_clear["HideShow"]     = net.ReadInt(2)
     mark_clear["Flashlight"]  = net.ReadInt(2)
     mark_clear["General"]     = net.ReadInt(2)
     mark_clear["NPCMovement"] = net.ReadInt(2)
@@ -673,7 +673,7 @@ net.Receive("XMH_DefaultsAll",function(_,ply)
     mark_clear["Weapons"]     = net.ReadInt(2)
     Defaults()
     mark_clear["Cleanup"]     = backup["Cleanup"]
-    mark_clear["Display"]     = backup["Display"]
+    mark_clear["HideShow"]     = backup["HideShow"]
     mark_clear["Flashlight"]  = backup["Flashlight"]
     mark_clear["General"]     = backup["General"]
     mark_clear["NPCMovement"] = backup["NPCMovement"]
@@ -942,7 +942,7 @@ local function Cleanup(Panel)
     end
 end
 
-local function Display(Panel)
+local function HideShow(Panel)
     local sv_cheats_menu = SetSVCheatsMenus(Panel.Header)
 
     xmh_menu = Panel:Button   (XMH_LANG[_LANG]["client_menu_display_crosshair"        ], "xmh_crosshair")
@@ -1289,7 +1289,7 @@ end
 hook.Add("PopulateToolMenu", "All hail the menus", function ()
     spawnmenu.AddToolMenuOption("Utilities", "Xala's Movie Helper", XMH_LANG[_LANG]["client_populate_menu_section1"] , XMH_LANG[_LANG]["client_populate_menu_section1"] , "", "", Informations)
     spawnmenu.AddToolMenuOption("Utilities", "Xala's Movie Helper", XMH_LANG[_LANG]["client_populate_menu_section2"] , XMH_LANG[_LANG]["client_populate_menu_section2"] , "", "", Cleanup     )
-    spawnmenu.AddToolMenuOption("Utilities", "Xala's Movie Helper", XMH_LANG[_LANG]["client_populate_menu_section3"] , XMH_LANG[_LANG]["client_populate_menu_section3"] , "", "", Display  )
+    spawnmenu.AddToolMenuOption("Utilities", "Xala's Movie Helper", XMH_LANG[_LANG]["client_populate_menu_section3"] , XMH_LANG[_LANG]["client_populate_menu_section3"] , "", "", HideShow  )
     spawnmenu.AddToolMenuOption("Utilities", "Xala's Movie Helper", XMH_LANG[_LANG]["client_populate_menu_section4"] , XMH_LANG[_LANG]["client_populate_menu_section4"] , "", "", Flashlight  )
     spawnmenu.AddToolMenuOption("Utilities", "Xala's Movie Helper", XMH_LANG[_LANG]["client_populate_menu_section5"] , XMH_LANG[_LANG]["client_populate_menu_section5"] , "", "", General     )
     spawnmenu.AddToolMenuOption("Utilities", "Xala's Movie Helper", XMH_LANG[_LANG]["client_populate_menu_section6"] , XMH_LANG[_LANG]["client_populate_menu_section6"] , "", "", NPCMovement )

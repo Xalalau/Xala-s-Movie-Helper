@@ -109,7 +109,7 @@ xmh_commands = {
   -- ##################### DISPLAY
   ["xmh_viewmodel_var"] = {
     command_type    = "function",
-    category        = "Display",
+    category        = "HideShow",
     default         = GetConVar("xmh_viewmodel_var"):GetInt(),
     value           = GetConVar("xmh_viewmodel_var"):GetInt(),
     cheat           = true,
@@ -118,14 +118,14 @@ xmh_commands = {
   },
   ["r_drawviewmodel"] = {
     command_type    = "runconsolecommand",
-    category        = "Display",
+    category        = "HideShow",
     default         = GetConVar("r_drawviewmodel"):GetInt(),
     cheat           = true,
     admin           = false
   },
   ["xmh_invisible_var"] = {
     command_type    = "net",
-    category        = "Display",
+    category        = "HideShow",
     default         = GetConVar("xmh_invisible_var"):GetInt(),
     value           = GetConVar("xmh_invisible_var"):GetInt(),
     cheat           = false,
@@ -135,7 +135,7 @@ xmh_commands = {
   },
   ["xmh_invisibleall_var"] = {
     command_type    = "net",
-    category        = "Display",
+    category        = "HideShow",
     default         = GetConVar("xmh_invisibleall_var"):GetInt(),
     value           = GetConVar("xmh_invisibleall_var"):GetInt(),
     cheat           = false,
@@ -145,7 +145,7 @@ xmh_commands = {
   },
   ["xmh_toolgun_var"] = {
     command_type    = "function",
-    category        = "Display",
+    category        = "HideShow",
     default         = GetConVar("xmh_toolgun_var"):GetInt(),
     value           = GetConVar("xmh_toolgun_var"):GetInt(),
     cheat           = false,
@@ -154,7 +154,7 @@ xmh_commands = {
   },
   ["xmh_toolgunmute_var"] = {
     command_type    = "function",
-    category        = "Display",
+    category        = "HideShow",
     default         = GetConVar("xmh_toolgunmute_var"):GetInt(),
     value           = GetConVar("xmh_toolgunmute_var"):GetInt(),
     cheat           = false,
@@ -163,7 +163,7 @@ xmh_commands = {
   },
   ["xmh_physgun_var"] = {
     command_type    = "function",
-    category        = "Display",
+    category        = "HideShow",
     default         = GetConVar("xmh_physgun_var"):GetInt(),
     value           = GetConVar("xmh_physgun_var"):GetInt(),
     cheat           = false,
@@ -172,7 +172,7 @@ xmh_commands = {
   },
   ["xmh_error_var"] = {
     command_type    = "function",
-    category        = "Display",
+    category        = "HideShow",
     default         = GetConVar("xmh_error_var"):GetInt(),
     value           = GetConVar("xmh_error_var"):GetInt(),
     cheat           = false,
@@ -181,7 +181,7 @@ xmh_commands = {
   },
   ["xmh_weapammitem_var"] = {
     command_type    = "hook",
-    category        = "Display",
+    category        = "HideShow",
     default         = GetConVar("xmh_weapammitem_var"):GetInt(),
     value           = GetConVar("xmh_weapammitem_var"):GetInt(),
     value2          = "HUDDrawPickupHistory",
@@ -191,7 +191,7 @@ xmh_commands = {
   },
   ["xmh_chatvoice_var"] = {
     command_type    = "hook",
-    category        = "Display",
+    category        = "HideShow",
     default         = GetConVar("xmh_chatvoice_var"):GetInt(),
     value           = GetConVar("xmh_chatvoice_var"):GetInt(),
     value2          = "PlayerStartVoice",
@@ -201,7 +201,7 @@ xmh_commands = {
   },
   ["xmh_voiceicons_var"] = {
     command_type    = "net",
-    category        = "Display",
+    category        = "HideShow",
     default         = GetConVar("xmh_voiceicons_var"):GetInt(),
     value           = GetConVar("xmh_voiceicons_var"):GetInt(),
     cheat           = true,
@@ -211,7 +211,7 @@ xmh_commands = {
   },
   ["xmh_footsteps_var"] = {
     command_type    = "net",
-    category        = "Display",
+    category        = "HideShow",
     default         = GetConVar("xmh_footsteps_var"):GetInt(),
     value           = GetConVar("xmh_footsteps_var"):GetInt(),
     cheat           = true,
@@ -221,70 +221,70 @@ xmh_commands = {
   },
   ["r_drawmodeldecals"] = {
     command_type    = "runconsolecommand",
-    category        = "Display",
+    category        = "HideShow",
     default         = GetConVar("r_drawmodeldecals"):GetInt(),
     cheat           = false,
     admin           = false
   },
   ["r_drawparticles"] = {
     command_type    = "runconsolecommand",
-    category        = "Display",
+    category        = "HideShow",
     default         = GetConVar("r_drawparticles"):GetInt(),
     cheat           = true,
     admin           = false
   },
   ["r_3dsky"] = {
     command_type    = "runconsolecommand",
-    category        = "Display",
+    category        = "HideShow",
     default         = GetConVar("r_3dsky"):GetInt(),
     cheat           = false,
     admin           = false
   },
   ["cl_show_splashes"] = {
     command_type    = "runconsolecommand",
-    category        = "Display",
+    category        = "HideShow",
     default         = GetConVar("cl_show_splashes"):GetInt(),
     cheat           = false,
     admin           = false
   },
   ["r_drawropes"] = {
     command_type    = "runconsolecommand",
-    category        = "Display",
+    category        = "HideShow",
     default         = GetConVar("r_drawropes"):GetInt(),
     cheat           = true,
     admin           = false
   },
   ["r_DrawBeams"] = {
     command_type    = "runconsolecommand",
-    category        = "Display",
+    category        = "HideShow",
     default         = GetConVar("r_DrawBeams"):GetInt(),
     cheat           = true,
     admin           = false
   },
   ["r_drawentities"] = {
     command_type    = "runconsolecommand",
-    category        = "Display",
+    category        = "HideShow",
     default         = GetConVar("r_drawentities"):GetInt(),
     cheat           = true,
     admin           = false
   },
   ["r_lod"] = {
     command_type    = "runconsolecommand",
-    category        = "Display",
+    category        = "HideShow",
     default         = GetConVar("r_lod"):GetInt(),
     cheat           = false,
     admin           = false
   },
   ["r_eyesize"] = {
     command_type    = "runconsolecommand",
-    category        = "Display",
+    category        = "HideShow",
     default         = GetConVar("r_eyesize"):GetInt(),
     cheat           = false,
     admin           = false
   },
   ["xmh_corpses_var"] = {
     command_type    = "net",
-    category        = "Display",
+    category        = "HideShow",
     default         = GetConVar("xmh_corpses_var"):GetInt(),
     value           = GetConVar("xmh_corpses_var"):GetInt(),
     cheat           = false,
@@ -293,21 +293,21 @@ xmh_commands = {
     admin           = true
   },
   ["hud_deathnotice_time"] = {
-    category        = "Display",
+    category        = "HideShow",
     default         = GetConVar("hud_deathnotice_time"):GetInt(),
     cheat           = false,
     admin           = false
   },
   ["hud_saytext_time"] = {
     command_type    = "runconsolecommand",
-    category        = "Display",
+    category        = "HideShow",
     default         = GetConVar("hud_saytext_time"):GetInt(),
     cheat           = false,
     admin           = false
   },
   ["xmh_decals_var"] = {
     command_type    = "function",
-    category        = "Display",
+    category        = "HideShow",
     default         = GetConVar("xmh_decals_var"):GetInt(),
     value           = GetConVar("xmh_decals_var"):GetInt(),
     cheat           = false,
@@ -316,7 +316,7 @@ xmh_commands = {
   },
   ["cl_detaildist"] = {
     command_type    = "runconsolecommand",
-    category        = "Display",
+    category        = "HideShow",
     default         = GetConVar("cl_detaildist"):GetInt(),
     cheat           = false,
     admin           = false
@@ -698,7 +698,7 @@ xmh_commands = {
     command_type    = "function",
     category        = "Defaults",
     value           = GetConVar("xmh_cldisplay_var"):GetInt(),
-    value2          = "Display",
+    value2          = "HideShow",
     cheat           = false,
     admin           = false
   },

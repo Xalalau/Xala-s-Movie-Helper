@@ -1185,7 +1185,7 @@ local function PlayerView(Panel)
 
     Panel:Help("")
     DCollapsible = vgui.Create("DCollapsibleCategory", Panel)
-    DCollapsible:SetLabel("Field of View")
+    DCollapsible:SetLabel(XMH_LANG[_LANG]["client_menu_playerview_fov_section"])
     DCollapsible:Dock(TOP)
 
     xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_playerview_fov"          ], "xmh_fov_var", 1, 359, 0)
@@ -1200,7 +1200,7 @@ local function PlayerView(Panel)
 
     Panel:Help("")
     DCollapsible = vgui.Create("DCollapsibleCategory", Panel)
-    DCollapsible:SetLabel("Third Person")
+    DCollapsible:SetLabel(XMH_LANG[_LANG]["client_menu_playerview_thirdp_section"])
     DCollapsible:Dock(TOP)
 
     xmh_menu = Panel:CheckBox  (XMH_LANG[_LANG]["client_menu_playerview_enable"            ], "xmh_person_var")

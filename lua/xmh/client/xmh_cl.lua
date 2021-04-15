@@ -784,7 +784,7 @@ end)
 
 -- Force our FOV. It's intrusive on other addons
 hook.Add("CalcView", "StartFOVSync", function(ply, origin, angles, fov, znear, zfar)
-    if not GetConVar("xmh_fov_unlock_var"):GetBool() then return end
+    if not GetConVar("xmh_fov_unlock_var"):GetBool() and ply:GetViewEntity():GetClass() != "gmod_cameraprop" then return end
 
     -- Get rid of most cases
 	if not (ply:GetViewEntity() == ply and not ply:InVehicle() and ply:Alive()) then

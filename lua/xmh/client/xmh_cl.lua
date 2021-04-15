@@ -875,12 +875,14 @@ end)
 hook.Add("CalcView", "StartFOVSync", function(ply, origin, angles, fov, znear, zfar)
     if not GetConVar("xmh_fov_unlock_var"):GetBool() and ply:GetViewEntity():GetClass() != "gmod_cameraprop" then return end
 
-    -- Get rid of most cases
-	if not (ply:GetViewEntity() == ply and not ply:InVehicle() and ply:Alive()) then
-        if ply:GetViewEntity():GetClass() != "gmod_cameraprop" then return end
-    end
-    -- From here I conflict with addons that change the player's camera, and there are many. Tht's why I created an option
-    -- to enable our FOV. So I'm manually adding to support for 3 addons plus some rare generic cases to make it a bit better
+    -- Don't control custom camera entities
+	if ply:GetViewEntity() != ply and ply:GetViewEntity():GetClass() != "gmod_cameraprop" then return end
+
+    -- Don't control the camera when the player is doing some actions
+    if ply:GetViewEntity() == ply and (ply:IsPlayingTaunt() or ply:InVehicle()) then return end
+
+    -- From here I still conflict with addons that change the player's view, and there are many. That's why I created an option
+    -- to enable our FOV. So, I'm manually adding to support to 3 addons plus some rare generic cases to make it a little smoother
 	if IsValid(ply:GetNWEntity("ScriptedVehicle")) then return end -- Hoverboard, maybe other addons
     if ply.RagdollFightArenaSpectator or ply.RagdollFightArena then return end  -- Ragdoll Fight
     if ply:GetViewEntity().CalcView or ply:GetActiveWeapon().CalcView then return end -- Entities with anexed CalcView, like Advanced Camera

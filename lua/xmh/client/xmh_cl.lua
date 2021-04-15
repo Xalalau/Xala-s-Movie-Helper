@@ -325,31 +325,66 @@ end
 function XMH_GreenSkybox(skybox_bool)
     local SourceSkyname = GetConVar("sv_skyname"):GetString()
     local SourceSkyPre    = {"lf","ft","rt","bk","dn","up"}
-    local SourceSkyMat    = {
-        Material("skybox/"..SourceSkyname.."lf"),
-        Material("skybox/"..SourceSkyname.."ft"),
-        Material("skybox/"..SourceSkyname.."rt"),
-        Material("skybox/"..SourceSkyname.."bk"),
-        Material("skybox/"..SourceSkyname.."dn"),
-        Material("skybox/"..SourceSkyname.."up"),
-    }
-    local T, A
 
-    if Material("skybox/backup"..SourceSkyPre[1]):Width() == 2 then -- Backup sky textures
-        for A = 1,6 do
-            T = SourceSkyMat[A]:GetTexture("$basetexture") 
-            Material("skybox/backup"..SourceSkyPre[A]):SetTexture("$basetexture",T)
+    -- Render 6 side skybox materials on every map or simple materials on the skybox on maps with env_skypainted entity
+    if SourceSkyname == "painted" then
+        if skybox_bool == 1 then
+            hook.Add("PostDraw2DSkyBox", "xmh_renderskybox", function()
+                local distance = 200
+                local width = distance * 2.01
+                local height = distance * 2.01
+
+                -- Render our fake skybox around the player
+                render.OverrideDepthEnable(true, false)
+
+                cam.Start3D(Vector(0, 0, 0), EyeAngles())
+                    render.SetMaterial(Material("skybox/green")) -- ft
+                    render.DrawQuadEasy(Vector(0,-distance,0), Vector(0,1,0), width, height, Color(255,255,255,255), 180)
+                    render.SetMaterial(Material("skybox/green")) -- bk
+                    render.DrawQuadEasy(Vector(0,distance,0), Vector(0,-1,0), width, height, Color(255,255,255,255), 180)
+                    render.SetMaterial(Material("skybox/green")) -- lf
+                    render.DrawQuadEasy(Vector(-distance,0,0), Vector(1,0,0), width, height, Color(255,255,255,255), 180)
+                    render.SetMaterial(Material("skybox/green")) -- rt
+                    render.DrawQuadEasy(Vector(distance,0,0), Vector(-1,0,0), width, height, Color(255,255,255,255), 180)
+                    render.SetMaterial(Material("skybox/green")) -- up
+                    render.DrawQuadEasy(Vector(0,0,distance), Vector(0,0,-1), width, height, Color(255,255,255,255), 0)
+                    render.SetMaterial(Material("skybox/green")) -- dn
+                    render.DrawQuadEasy(Vector(0,0,-distance), Vector(0,0,1), width, height, Color(255,255,255,255), 0)
+                cam.End3D()
+
+                render.OverrideDepthEnable(false, false)
+            end)
+        else
+            hook.Remove("PostDraw2DSkyBox", "xmh_renderskybox")
         end
-    end
-    if skybox_bool == 1 then -- Green sky
-        T = Material("skybox/green"):GetTexture("$basetexture")
-        for A = 1,6 do 
-            SourceSkyMat[A]:SetTexture("$basetexture",T)
+    -- Change skybox materials on maps without env_skypainted entity
+    else
+        local SourceSkyMat    = {
+            Material("skybox/"..SourceSkyname.."lf"),
+            Material("skybox/"..SourceSkyname.."ft"),
+            Material("skybox/"..SourceSkyname.."rt"),
+            Material("skybox/"..SourceSkyname.."bk"),
+            Material("skybox/"..SourceSkyname.."dn"),
+            Material("skybox/"..SourceSkyname.."up"),
+        }
+        local T, A
+
+        if Material("skybox/backup"..SourceSkyPre[1]):Width() == 2 then -- Backup sky textures
+            for A = 1,6 do
+                T = SourceSkyMat[A]:GetTexture("$basetexture") 
+                Material("skybox/backup"..SourceSkyPre[A]):SetTexture("$basetexture",T)
+            end
         end
-    else -- Original sky
-        for A = 1,6 do
-            T = Material("skybox/backup"..SourceSkyPre[A]):GetTexture("$basetexture")
-            SourceSkyMat[A]:SetTexture("$basetexture",T)
+        if skybox_bool == 1 then -- Green sky
+            T = Material("skybox/green"):GetTexture("$basetexture")
+            for A = 1,6 do 
+                SourceSkyMat[A]:SetTexture("$basetexture",T)
+            end
+        else -- Original sky
+            for A = 1,6 do
+                T = Material("skybox/backup"..SourceSkyPre[A]):GetTexture("$basetexture")
+                SourceSkyMat[A]:SetTexture("$basetexture",T)
+            end
         end
     end
 end
@@ -999,10 +1034,8 @@ local function General(Panel)
         table.insert(sv_cheats_menu, xmh_menu)
         xmh_menu:SetTooltip     (XMH_LANG[_LANG]["client_menu_general_lipsync_desc" ])
     end
-    if (GetConVar("sv_skyname"):GetString() != "painted") then
-        xmh_menu = Panel:CheckBox (XMH_LANG[_LANG]["client_menu_general_green"        ], "xmh_skybox_var")
-        xmh_menu:SetTooltip       (XMH_LANG[_LANG]["client_menu_general_green_desc"   ])
-    end
+    xmh_menu = Panel:CheckBox (XMH_LANG[_LANG]["client_menu_general_green"        ], "xmh_skybox_var")
+    xmh_menu:SetTooltip       (XMH_LANG[_LANG]["client_menu_general_green_desc"   ])
     if checkAdmin() == true then
         xmh_menu = Panel:CheckBox (XMH_LANG[_LANG]["client_menu_general_autosave"     ], "xmh_save_var")
         xmh_menu:SetTooltip       (XMH_LANG[_LANG]["client_menu_general_autosave_desc"])

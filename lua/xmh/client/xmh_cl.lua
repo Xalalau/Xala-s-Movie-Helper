@@ -26,7 +26,7 @@ local mark_clear = { -- Cleanup table
     ["NPCMovement"] = 1,
     ["Physics"] = 1,
     ["Shadows"] = 1,
-    ["Camera"] = 1,
+    ["PlayerView"] = 1,
     ["Weapons"] = 1,
     ["Defauts"] = 0
 }
@@ -637,7 +637,7 @@ local function Defaults()
         net.WriteInt     (mark_clear["NPCMovement"], 2)
         net.WriteInt     (mark_clear["Physics"]    , 2)
         net.WriteInt     (mark_clear["Shadows"]    , 2)
-        net.WriteInt     (mark_clear["Camera"], 2)
+        net.WriteInt     (mark_clear["PlayerView"], 2)
         net.WriteInt     (mark_clear["Weapons"]    , 2)
         net.SendToServer (                            )
     end
@@ -671,7 +671,7 @@ net.Receive("XMH_DefaultsAll",function(_,ply)
     mark_clear["NPCMovement"] = net.ReadInt(2)
     mark_clear["Physics"]     = net.ReadInt(2)
     mark_clear["Shadows"]     = net.ReadInt(2)
-    mark_clear["Camera"] = net.ReadInt(2)
+    mark_clear["PlayerView"] = net.ReadInt(2)
     mark_clear["Weapons"]     = net.ReadInt(2)
     Defaults()
     mark_clear["Cleanup"]     = backup["Cleanup"]
@@ -681,7 +681,7 @@ net.Receive("XMH_DefaultsAll",function(_,ply)
     mark_clear["NPCMovement"] = backup["NPCMovement"]
     mark_clear["Physics"]     = backup["Physics"]
     mark_clear["Shadows"]     = backup["Shadows"]
-    mark_clear["Camera"] = backup["Camera"]
+    mark_clear["PlayerView"] = backup["PlayerView"]
     mark_clear["Weapons"]     = backup["Weapons"]
 end)
 
@@ -1175,7 +1175,7 @@ local function Teleport(Panel)
     xmh_menu:SetTooltip     (XMH_LANG[_LANG]["client_menu_teleport_go_desc"    ])
 end
 
-local function Camera(Panel)
+local function PlayerView(Panel)
     local sv_cheats_menu = SetSVCheatsMenus(Panel.Header)
     local DCollapsible
 
@@ -1291,7 +1291,7 @@ hook.Add("PopulateToolMenu", "All hail the menus", function ()
     spawnmenu.AddToolMenuOption("Utilities", "Xala's Movie Helper", XMH_LANG[_LANG]["client_populate_menu_section7"] , XMH_LANG[_LANG]["client_populate_menu_section7"] , "", "", Physics     )
     spawnmenu.AddToolMenuOption("Utilities", "Xala's Movie Helper", XMH_LANG[_LANG]["client_populate_menu_section8"] , XMH_LANG[_LANG]["client_populate_menu_section8"] , "", "", Shadows     )
     spawnmenu.AddToolMenuOption("Utilities", "Xala's Movie Helper", XMH_LANG[_LANG]["client_populate_menu_section9"] , XMH_LANG[_LANG]["client_populate_menu_section9"] , "", "", Teleport    )
-    spawnmenu.AddToolMenuOption("Utilities", "Xala's Movie Helper", XMH_LANG[_LANG]["client_populate_menu_section10"], XMH_LANG[_LANG]["client_populate_menu_section10"], "", "", Camera )
+    spawnmenu.AddToolMenuOption("Utilities", "Xala's Movie Helper", XMH_LANG[_LANG]["client_populate_menu_section10"], XMH_LANG[_LANG]["client_populate_menu_section10"], "", "", PlayerView )
     spawnmenu.AddToolMenuOption("Utilities", "Xala's Movie Helper", XMH_LANG[_LANG]["client_populate_menu_section12"], XMH_LANG[_LANG]["client_populate_menu_section12"], "", "", Weapons     )
     spawnmenu.AddToolMenuOption("Utilities", "Xala's Movie Helper", XMH_LANG[_LANG]["client_populate_menu_section11"], XMH_LANG[_LANG]["client_populate_menu_section11"], "", "", Defaults    )
 end)

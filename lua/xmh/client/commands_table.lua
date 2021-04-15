@@ -599,7 +599,7 @@ xmh_commands = {
   -- ##################### THIRD PERSON
   ["xmh_person_var"] = {
     command_type    = "function",
-    category        = "Camera",
+    category        = "PlayerView",
     default         = GetConVar("xmh_person_var"):GetInt(),
     value           = GetConVar("xmh_person_var"):GetInt(),
     cheat           = true,
@@ -608,56 +608,56 @@ xmh_commands = {
   },
   ["cam_showangles"] = {
     command_type    = "runconsolecommand",
-    category        = "Camera",
+    category        = "PlayerView",
     default         = GetConVar("cam_showangles"):GetInt(),
     cheat           = true,
     admin           = false
   },
   ["cam_collision"] = {
     command_type    = "runconsolecommand",
-    category        = "Camera",
+    category        = "PlayerView",
     default         = GetConVar("cam_collision"):GetInt(),
     cheat           = true,
     admin           = false
   },
   ["cam_idealdist"] = {
     command_type    = "runconsolecommand",
-    category        = "Camera",
+    category        = "PlayerView",
     default         = GetConVar("cam_idealdist"):GetInt(),
     cheat           = true,
     admin           = false
   },
   ["cam_idealdistup"] = {
     command_type    = "runconsolecommand",
-    category        = "Camera",
+    category        = "PlayerView",
     default         = GetConVar("cam_idealdistup"):GetInt(),
     cheat           = true,
     admin           = false
   },
   ["cam_idealdistright"] = {
     command_type    = "runconsolecommand",
-    category        = "Camera",
+    category        = "PlayerView",
     default         = GetConVar("cam_idealdistright"):GetInt(),
     cheat           = true,
     admin           = false
   },
   ["cam_idealpitch"] = {
     command_type    = "runconsolecommand",
-    category        = "Camera",
+    category        = "PlayerView",
     default         = GetConVar("cam_idealpitch"):GetInt(),
     cheat           = true,
     admin           = false
   },
   ["cam_idealyaw"] = {
     command_type    = "runconsolecommand",
-    category        = "Camera",
+    category        = "PlayerView",
     default         = GetConVar("cam_idealyaw"):GetInt(),
     cheat           = true,
     admin           = false
   },
   ["cam_ideallag"] = {
     command_type    = "runconsolecommand",
-    category        = "Camera",
+    category        = "PlayerView",
     default         = GetConVar("cam_ideallag"):GetInt(),
     cheat           = true,
     admin           = false
@@ -741,7 +741,7 @@ xmh_commands = {
     command_type    = "function",
     category        = "Defaults",
     value           = GetConVar("xmh_cltp_var"):GetInt(),
-    value2          = "Camera",
+    value2          = "PlayerView",
     cheat           = false,
     admin           = false
   },

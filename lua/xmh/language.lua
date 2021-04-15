@@ -241,7 +241,7 @@ XMH_LANG = {
     ["client_populate_menu_section7"] = "Physics",
     ["client_populate_menu_section8"] = "Shadows",
     ["client_populate_menu_section9"] = "Teleport",
-    ["client_populate_menu_section10"] = "Camera",
+    ["client_populate_menu_section10"] = "Player View",
     ["client_populate_menu_section11"] = "[Reset options]",
     ["client_populate_menu_section12"] = "Weapons",
   },
@@ -487,7 +487,7 @@ XMH_LANG = {
     ["client_populate_menu_section7"] = "Física",
     ["client_populate_menu_section8"] = "Sombras",
     ["client_populate_menu_section9"] = "Teletransporte",
-    ["client_populate_menu_section10"] = "Câmera",
+    ["client_populate_menu_section10"] = "Visão do Jogador",
     ["client_populate_menu_section11"] = "[Resetar opções]",
     ["client_populate_menu_section12"] = "Armas",
   }

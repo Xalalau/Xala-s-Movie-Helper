@@ -243,7 +243,7 @@ XMH_LANG = {
     ["client_populate_menu_section7"] = "Physics",
     ["client_populate_menu_section8"] = "Shadows",
     ["client_populate_menu_section9"] = "Teleport",
-    ["client_populate_menu_section10"] = "Camera",
+    ["client_populate_menu_section10"] = "Player View",
     ["client_populate_menu_section11"] = "[Reset options]",
     ["client_populate_menu_section12"] = "Weapons",
   },

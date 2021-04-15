@@ -188,6 +188,7 @@ CreateClientConVar("xmh_timescale_var"         ,1   ,false,false) -- Server
 CreateClientConVar("xmh_wfriction_var"         ,8   ,false,false) -- Server
 CreateClientConVar("xmh_weapammitem_var"       ,1   ,false,false) --   Client
 CreateClientConVar("xmh_error_var"             ,1   ,false,false) --   Client
+CreateClientConVar("xmh_fov_unlock_var"        ,0   ,false,false) --   Client
 CreateClientConVar("xmh_fov_var"               ,100 ,false,false) --   Client
 CreateClientConVar("xmh_viewmodel_var"         ,1   ,false,false) --   Client
 CreateClientConVar("xmh_clcleanup_var"         ,1   ,false,false) --   Client
@@ -783,6 +784,8 @@ end)
 
 -- Force our FOV. It's intrusive on other addons
 hook.Add("CalcView", "StartFOVSync", function(ply, origin, angles, fov, znear, zfar)
+    if not GetConVar("xmh_fov_unlock_var"):GetBool() then return end
+
     -- Get rid of most cases
 	if not (ply:GetViewEntity() == ply and not ply:InVehicle() and ply:Alive()) then
         if ply:GetViewEntity():GetClass() != "gmod_cameraprop" then return end
@@ -1185,12 +1188,16 @@ local function PlayerView(Panel)
     DCollapsible:SetLabel(XMH_LANG[_LANG]["client_menu_playerview_fov_section"])
     DCollapsible:Dock(TOP)
 
-    xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_playerview_fov"          ], "xmh_fov_var", 1, 359, 0)
-    table.insert(sv_cheats_menu, xmh_menu)
-    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_playerview_fov_desc"     ])
     xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_playerview_vfov"         ], "viewmodel_fov", 0, 360, 0)
     table.insert(sv_cheats_menu, xmh_menu)
     xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_playerview_vfov_desc"    ])
+    xmh_menu = Panel:CheckBox  (XMH_LANG[_LANG]["client_menu_playerview_fov_unlock"   ], "xmh_fov_unlock_var")
+    table.insert(sv_cheats_menu, xmh_menu)
+    Panel:SetTooltip           (XMH_LANG[_LANG]["client_menu_playerview_fov_unlock_desc" ])
+    Panel:ControlHelp          (XMH_LANG[_LANG]["client_menu_playerview_fov_unlock_notes"])
+    xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_playerview_fov"          ], "xmh_fov_var", 1, 359, 0)
+    table.insert(sv_cheats_menu, xmh_menu)
+    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_playerview_fov_desc"     ])
     xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_playerview_cfov"         ], "xmh_camera_fov", 1, 359, 0)
     table.insert(sv_cheats_menu, xmh_menu)
     xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_playerview_cfov_desc"    ])

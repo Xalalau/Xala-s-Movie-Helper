@@ -572,21 +572,26 @@ xmh_commands = {
     func            = XMH_Shake,
     admin           = false
   },
+  ["viewmodel_fov"] = {
+    command_type    = "runconsolecommand",
+    category        = "PlayerView",
+    default         = GetConVar("viewmodel_fov"):GetInt(),
+    cheat           = true,
+    admin           = false
+  },
   ["xmh_fov_var"] = {
     command_type    = "function",
-    sub_type        = "fix",
     category        = "PlayerView",
-    real_command    = "fov",
     default         = GetConVar("xmh_fov_var"):GetInt(),
     value           = GetConVar("xmh_fov_var"):GetInt(),
     cheat           = true,
     func            = XMH_RunCommand,
     admin           = false
   },
-  ["viewmodel_fov"] = {
+  ["xmh_fov_unlock_var"] = {
     command_type    = "runconsolecommand",
     category        = "PlayerView",
-    default         = GetConVar("viewmodel_fov"):GetInt(),
+    default         = GetConVar("xmh_fov_unlock_var"):GetInt(),
     cheat           = true,
     admin           = false
   },

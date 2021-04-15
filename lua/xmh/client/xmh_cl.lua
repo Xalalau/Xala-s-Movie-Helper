@@ -942,7 +942,7 @@ local function Cleanup(Panel)
     end
 end
 
-local function HideOrShow(Panel)
+local function Display(Panel)
     local sv_cheats_menu = SetSVCheatsMenus(Panel.Header)
 
     xmh_menu = Panel:Button   (XMH_LANG[_LANG]["client_menu_hideshow_crosshair"        ], "xmh_crosshair")
@@ -1271,7 +1271,7 @@ end
 hook.Add("PopulateToolMenu", "All hail the menus", function ()
     spawnmenu.AddToolMenuOption("Utilities", "Xala's Movie Helper", XMH_LANG[_LANG]["client_populate_menu_section1"] , XMH_LANG[_LANG]["client_populate_menu_section1"] , "", "", Informations)
     spawnmenu.AddToolMenuOption("Utilities", "Xala's Movie Helper", XMH_LANG[_LANG]["client_populate_menu_section2"] , XMH_LANG[_LANG]["client_populate_menu_section2"] , "", "", Cleanup     )
-    spawnmenu.AddToolMenuOption("Utilities", "Xala's Movie Helper", XMH_LANG[_LANG]["client_populate_menu_section3"] , XMH_LANG[_LANG]["client_populate_menu_section3"] , "", "", HideOrShow  )
+    spawnmenu.AddToolMenuOption("Utilities", "Xala's Movie Helper", XMH_LANG[_LANG]["client_populate_menu_section3"] , XMH_LANG[_LANG]["client_populate_menu_section3"] , "", "", Display  )
     spawnmenu.AddToolMenuOption("Utilities", "Xala's Movie Helper", XMH_LANG[_LANG]["client_populate_menu_section4"] , XMH_LANG[_LANG]["client_populate_menu_section4"] , "", "", Flashlight  )
     spawnmenu.AddToolMenuOption("Utilities", "Xala's Movie Helper", XMH_LANG[_LANG]["client_populate_menu_section5"] , XMH_LANG[_LANG]["client_populate_menu_section5"] , "", "", General     )
     spawnmenu.AddToolMenuOption("Utilities", "Xala's Movie Helper", XMH_LANG[_LANG]["client_populate_menu_section6"] , XMH_LANG[_LANG]["client_populate_menu_section6"] , "", "", NPCMovement )

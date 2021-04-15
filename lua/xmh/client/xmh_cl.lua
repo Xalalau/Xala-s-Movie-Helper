@@ -1,6 +1,6 @@
 --[[
    \   XALA'S MOVIE HELPER
- =3 ]]  Revision = "XMH.Rev.24.3 - 13/04/2021 (dd/mm/yyyy)" --[[
+ =3 ]]  Revision = "XMH.Rev.24.4 - 15/04/2021 (dd/mm/yyyy)" --[[
  =o |   License: MIT
    /   Created by: Xalalau Xubilozo
   |
@@ -784,13 +784,19 @@ timer.Create("Sync",0.50,0,function()
     end
 end)
 
--- Force the FOV to stay as it should
+-- Force our FOV. It's intrusive on other addons
 hook.Add("CalcView", "StartFOVSync", function(ply, origin, angles, fov, znear, zfar)
-    -- Most of this code was imported from GMod (https://github.com/Facepunch/garrysmod/blob/b7da4993e8fbee1789eee4cded85114849d17699/garrysmod/gamemodes/base/gamemode/cl_init.lua#L347)
-	local Vehicle	= ply:GetVehicle()
-	local Weapon	= ply:GetActiveWeapon()
+    -- Get rid of most cases
+	if not (ply:GetViewEntity() == ply and not ply:InVehicle() and ply:Alive()) then
+        if ply:GetViewEntity():GetClass() != "gmod_cameraprop" then return end
+    end
+    -- From here I conflict with addons that change the player's camera, and there are many. Tht's why I created an option
+    -- to enable our FOV. So I'm manually adding to support for 3 addons plus some rare generic cases to make it a bit better
+	if IsValid(ply:GetNWEntity("ScriptedVehicle")) then return end -- Hoverboard, maybe other addons
+    if ply.RagdollFightArenaSpectator or ply.RagdollFightArena then return end  -- Ragdoll Fight
+    if ply:GetViewEntity().CalcView or ply:GetActiveWeapon().CalcView then return end -- Entities with anexed CalcView, like Advanced Camera
 
-	local view = {
+    local view = {
 		["origin"] = origin,
 		["angles"] = angles,
 		["fov"] = fov,
@@ -799,43 +805,13 @@ hook.Add("CalcView", "StartFOVSync", function(ply, origin, angles, fov, znear, z
 		["drawviewer"] = false,
 	}
 
-	--
-    -- Give the active view entity a go at changing the view
-	--
-    if ply:GetViewEntity().CalcView then
-        return ply:GetViewEntity():CalcView(ply, origin, angles, fov, znear, zfar)
-    end
-
-	--
-	-- Let the vehicle override the view and allows the vehicle view to be hooked
-	--
-	if ( IsValid( Vehicle ) ) then return hook.Run( "CalcVehicleView", Vehicle, ply, view ) end
-
-	--
-	-- Let drive possibly alter the view
-	--
-	if ( drive.CalcView( ply, view ) ) then return view end
-
-	--
-	-- Give the player manager a turn at altering the view
-	--
-	player_manager.RunClass( ply, "CalcView", view )
-
-	-- Give the active weapon a go at changing the view
-	if ( IsValid( Weapon ) ) then
-
-		local func = Weapon.CalcView
-		if ( func ) then
-			local origin, angles, fov = func( Weapon, ply, Vector( view.origin ), Angle( view.angles ), view.fov ) -- Note: Constructor to copy the object so the child function can't edit it.
-			view.origin, view.angles, view.fov = origin or view.origin, angles or view.angles, fov or view.fov
-		end
-
-	end
-
-     -- Our FOV
-    if not Weapon.CalcView and fov >= 75 and fov <= 100 then -- Hack: try to ""detect"" weapons with active zoom by modifying the fov only when it's in the range of the game's options menu.
+    -- Set our FOV
+    --   Ignore it if the weapon has a CalcView field
+    --   Try to ""detect"" weapons with active zoom by modifying the fov only when it's in the default players range
+    local weapon = ply:GetActiveWeapon()
+    if ((IsValid(weapon) or true) and not weapon.CalcView) and fov >= 75 and fov <= 100 then 
         -- Cameras
-        if (ply:GetViewEntity():GetClass() == "gmod_cameraprop") then
+        if ply:GetViewEntity():GetClass() == "gmod_cameraprop" then
             view.fov = GetConVar("xmh_camera_fov"):GetInt()
         -- Player
         else

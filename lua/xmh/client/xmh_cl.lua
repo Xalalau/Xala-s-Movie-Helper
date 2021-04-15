@@ -1054,9 +1054,6 @@ local function General(Panel)
         table.insert(sv_cheats_menu, xmh_menu)
         xmh_menu:SetTooltip     (XMH_LANG[_LANG]["client_menu_general_lipsync_desc" ])
     end
-    xmh_menu = Panel:CheckBox (XMH_LANG[_LANG]["client_menu_general_shake"        ], "xmh_shake_var")
-    table.insert(sv_cheats_menu, xmh_menu)
-    xmh_menu:SetTooltip       (XMH_LANG[_LANG]["client_menu_general_shake_desc"   ])
     if (GetConVar("sv_skyname"):GetString() != "painted") then
         xmh_menu = Panel:CheckBox (XMH_LANG[_LANG]["client_menu_general_green"        ], "xmh_skybox_var")
         xmh_menu:SetTooltip       (XMH_LANG[_LANG]["client_menu_general_green_desc"   ])
@@ -1065,15 +1062,6 @@ local function General(Panel)
         xmh_menu = Panel:CheckBox (XMH_LANG[_LANG]["client_menu_general_autosave"     ], "xmh_save_var")
         xmh_menu:SetTooltip       (XMH_LANG[_LANG]["client_menu_general_autosave_desc"])
     end
-    xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_general_fov"          ], "xmh_fov_var", 1, 359, 0)
-    table.insert(sv_cheats_menu, xmh_menu)
-    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_general_fov_desc"     ])
-    xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_general_vfov"         ], "viewmodel_fov", 0, 360, 0)
-    table.insert(sv_cheats_menu, xmh_menu)
-    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_general_vfov_desc"    ])
-    xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_general_cfov"         ], "xmh_camera_fov", 1, 359, 0)
-    table.insert(sv_cheats_menu, xmh_menu)
-    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_general_cfov_desc"    ])
 end
 
 local function NPCMovement(Panel)
@@ -1189,6 +1177,31 @@ end
 
 local function Camera(Panel)
     local sv_cheats_menu = SetSVCheatsMenus(Panel.Header)
+    local DCollapsible
+
+    xmh_menu = Panel:CheckBox (XMH_LANG[_LANG]["client_menu_general_shake"        ], "xmh_shake_var")
+    table.insert(sv_cheats_menu, xmh_menu)
+
+    Panel:Help("")
+    DCollapsible = vgui.Create("DCollapsibleCategory", Panel)
+    DCollapsible:SetLabel("Field of View")
+    DCollapsible:Dock(TOP)
+
+    xmh_menu:SetTooltip       (XMH_LANG[_LANG]["client_menu_general_shake_desc"   ])
+    xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_general_fov"          ], "xmh_fov_var", 1, 359, 0)
+    table.insert(sv_cheats_menu, xmh_menu)
+    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_general_fov_desc"     ])
+    xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_general_vfov"         ], "viewmodel_fov", 0, 360, 0)
+    table.insert(sv_cheats_menu, xmh_menu)
+    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_general_vfov_desc"    ])
+    xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_general_cfov"         ], "xmh_camera_fov", 1, 359, 0)
+    table.insert(sv_cheats_menu, xmh_menu)
+    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_general_cfov_desc"    ])
+
+    Panel:Help("")
+    DCollapsible = vgui.Create("DCollapsibleCategory", Panel)
+    DCollapsible:SetLabel("Third Person")
+    DCollapsible:Dock(TOP)
 
     xmh_menu = Panel:CheckBox  (XMH_LANG[_LANG]["client_menu_thirdp_enable"            ], "xmh_person_var")
     table.insert(sv_cheats_menu, xmh_menu)

@@ -1333,16 +1333,16 @@ end
 local function Defaults(Panel)
     Panel:Button             (XMH_LANG[_LANG]["client_menu_defaults_select_"          ], "xmh_checkuncheck")
     Panel:CheckBox           (XMH_LANG[_LANG]["client_populate_menu_section2"         ], "xmh_clcleanup_var")
-    Panel:CheckBox           (XMH_LANG[_LANG]["client_populate_menu_section3"         ], "xmh_cldisplay_var")
     Panel:CheckBox           (XMH_LANG[_LANG]["client_populate_menu_section4"         ], "xmh_clfl_var")
     Panel:CheckBox           (XMH_LANG[_LANG]["client_populate_menu_section5"         ], "xmh_clgeneral_var")
     Panel:CheckBox           (XMH_LANG[_LANG]["client_populate_menu_section6"         ], "xmh_clnpcmove_var")
     if checkAdmin() == true then
-        Panel:CheckBox       (XMH_LANG[_LANG]["client_populate_menu_section7"          ], "xmh_clphysics_var")
+        Panel:CheckBox       (XMH_LANG[_LANG]["client_populate_menu_section7"         ], "xmh_clphysics_var")
     end
-    Panel:CheckBox           (XMH_LANG[_LANG]["client_populate_menu_section8"          ], "xmh_clshadows_var")
-    Panel:CheckBox           (XMH_LANG[_LANG]["client_populate_menu_section10"         ], "xmh_cltp_var")
-    Panel:CheckBox           (XMH_LANG[_LANG]["client_populate_menu_section12"         ], "xmh_clweapons_var")
+    Panel:CheckBox           (XMH_LANG[_LANG]["client_populate_menu_section10"        ], "xmh_cltp_var")
+    Panel:CheckBox           (XMH_LANG[_LANG]["client_populate_menu_section8"         ], "xmh_clshadows_var")
+    Panel:CheckBox           (XMH_LANG[_LANG]["client_populate_menu_section3"         ], "xmh_cldisplay_var")
+    Panel:CheckBox           (XMH_LANG[_LANG]["client_populate_menu_section12"        ], "xmh_clweapons_var")
     if checkAdmin() == false then
         xmh_menu = Panel:Button (XMH_LANG[_LANG]["client_menu_defaults_set_ply"           ], "xmh_defaults")
         xmh_menu:SetTooltip     (XMH_LANG[_LANG]["client_menu_defaults_set_ply_desc"      ])

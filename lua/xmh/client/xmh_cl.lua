@@ -210,7 +210,7 @@ CreateClientConVar("xmh_make_invisibility_admin_only_var",0,false,false) -- Serv
 CreateClientConVar("xmh_positionname_var" ,XMH_LANG[_LANG]["client_var_teleport"],false,false) -- Client
 
 ----------------------------
--- Teleport
+-- Position
 ----------------------------
 
 -- Loads the map saved teleport_positions file
@@ -256,7 +256,7 @@ local function DeleteTeleportPos()
     if not locationName then return end
 
     local qPanel = vgui.Create("DFrame")
-        qPanel:SetTitle(XMH_LANG[_LANG]["client_menu_teleport_delete_msg1"])
+        qPanel:SetTitle(XMH_LANG[_LANG]["client_menu_position_delete_msg1"])
         qPanel:SetSize(285, 110)
         qPanel:SetPos(10, 10)
         qPanel:SetDeleteOnClose(true)
@@ -269,7 +269,7 @@ local function DeleteTeleportPos()
     local text = vgui.Create("DLabel", qPanel)
         text:SetPos(40, 25)
         text:SetSize(275, 25)
-        text:SetText(XMH_LANG[_LANG]["client_menu_teleport_delete_msg2"])
+        text:SetText(XMH_LANG[_LANG]["client_menu_position_delete_msg2"])
 
     local panel = vgui.Create("DPanel", qPanel)
         panel:SetPos(5, 50)
@@ -283,7 +283,7 @@ local function DeleteTeleportPos()
 
     local buttonYes = vgui.Create("DButton", qPanel)
         buttonYes:SetPos(22, 75)
-        buttonYes:SetText(XMH_LANG[_LANG]["client_menu_teleport_delete_confirm"])
+        buttonYes:SetText(XMH_LANG[_LANG]["client_menu_position_delete_confirm"])
         buttonYes:SetSize(120, 30)
         buttonYes.DoClick = function()
             teleport_positions[locationName] = nil
@@ -297,7 +297,7 @@ local function DeleteTeleportPos()
 
     local buttonNo = vgui.Create("DButton", qPanel)
         buttonNo:SetPos(146, 75)
-        buttonNo:SetText(XMH_LANG[_LANG]["client_menu_teleport_delete_deny"])
+        buttonNo:SetText(XMH_LANG[_LANG]["client_menu_position_delete_deny"])
         buttonNo:SetSize(120, 30)
         buttonNo.DoClick = function()
             qPanel:Close()
@@ -305,13 +305,13 @@ local function DeleteTeleportPos()
 end
 
 local function SetRespawnPoint()
-    LocalPlayer():PrintMessage(HUD_PRINTTALK, XMH_LANG[_LANG]["client_menu_teleport_set_msg"] .." (" .. tostring(LocalPlayer():GetPos()) .. ")")
+    LocalPlayer():PrintMessage(HUD_PRINTTALK, XMH_LANG[_LANG]["client_menu_position_set_msg"] .." (" .. tostring(LocalPlayer():GetPos()) .. ")")
     net.Start("XMH_SetRespawn")
     net.SendToServer()
 end
 
 local function UnsetRespawnPoint()
-    LocalPlayer():PrintMessage(HUD_PRINTTALK, XMH_LANG[_LANG]["client_menu_teleport_unset_msg"])
+    LocalPlayer():PrintMessage(HUD_PRINTTALK, XMH_LANG[_LANG]["client_menu_position_unset_msg"])
     net.Start("XMH_SetRespawn")
         net.WriteBool(true)
     net.SendToServer()
@@ -1279,22 +1279,32 @@ local function Shadows(Panel)
     xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_shadows_match_desc"     ])
 end
 
-local function Teleport(Panel)
-    Panel:TextEntry         (XMH_LANG[_LANG]["client_menu_teleport_name"       ], "xmh_positionname_var")
-    xmh_menu = Panel:Button (XMH_LANG[_LANG]["client_menu_teleport_save"       ], "xmh_saveteleport")
-    xmh_menu:SetTooltip     (XMH_LANG[_LANG]["client_menu_teleport_save_desc"  ])
+local function Position(Panel)
+    Panel:Help("")
+    DCollapsible = vgui.Create("DCollapsibleCategory", Panel)
+    DCollapsible:SetLabel(XMH_LANG[_LANG]["client_menu_position_section1"])
+    DCollapsible:Dock(TOP)
+
+    Panel:TextEntry         (XMH_LANG[_LANG]["client_menu_position_name"       ], "xmh_positionname_var")
+    xmh_menu = Panel:Button (XMH_LANG[_LANG]["client_menu_position_save"       ], "xmh_saveteleport")
+    xmh_menu:SetTooltip     (XMH_LANG[_LANG]["client_menu_position_save_desc"  ])
     Panel:Help              ("")
-    teleport_combobox = Panel:ComboBox(XMH_LANG[_LANG]["client_menu_teleport_destination"])
+    teleport_combobox = Panel:ComboBox(XMH_LANG[_LANG]["client_menu_position_destination"])
     LoadTeleports()
-    xmh_menu = Panel:Button (XMH_LANG[_LANG]["client_menu_teleport_delete"     ], "xmh_deleteteleportpos")
-    xmh_menu:SetTooltip     (XMH_LANG[_LANG]["client_menu_teleport_delete_desc"])
-    xmh_menu = Panel:Button (XMH_LANG[_LANG]["client_menu_teleport_go"         ], "xmh_teleporttopos")
-    xmh_menu:SetTooltip     (XMH_LANG[_LANG]["client_menu_teleport_go_desc"    ])
-    Panel:Help              ("")
-    xmh_menu = Panel:Button (XMH_LANG[_LANG]["client_menu_teleport_respawn"           ], "xmh_setrespawnpoint")
-    xmh_menu:SetTooltip     (XMH_LANG[_LANG]["client_menu_teleport_respawn_desc"      ])
-    xmh_menu = Panel:Button (XMH_LANG[_LANG]["client_menu_teleport_respawn_clear"     ], "xmh_unsetrespawnpoint")
-    xmh_menu:SetTooltip     (XMH_LANG[_LANG]["client_menu_teleport_respawn_clear_desc"])
+    xmh_menu = Panel:Button (XMH_LANG[_LANG]["client_menu_position_delete"     ], "xmh_deleteteleportpos")
+    xmh_menu:SetTooltip     (XMH_LANG[_LANG]["client_menu_position_delete_desc"])
+    xmh_menu = Panel:Button (XMH_LANG[_LANG]["client_menu_position_go"         ], "xmh_teleporttopos")
+    xmh_menu:SetTooltip     (XMH_LANG[_LANG]["client_menu_position_go_desc"    ])
+
+    Panel:Help("")
+    DCollapsible = vgui.Create("DCollapsibleCategory", Panel)
+    DCollapsible:SetLabel(XMH_LANG[_LANG]["client_menu_position_section2"])
+    DCollapsible:Dock(TOP)
+
+    xmh_menu = Panel:Button (XMH_LANG[_LANG]["client_menu_position_respawn"           ], "xmh_setrespawnpoint")
+    xmh_menu:SetTooltip     (XMH_LANG[_LANG]["client_menu_position_respawn_desc"      ])
+    xmh_menu = Panel:Button (XMH_LANG[_LANG]["client_menu_position_respawn_clear"     ], "xmh_unsetrespawnpoint")
+    xmh_menu:SetTooltip     (XMH_LANG[_LANG]["client_menu_position_respawn_clear_desc"])
 end
 
 local function Weapons(Panel)
@@ -1355,7 +1365,7 @@ hook.Add("PopulateToolMenu", "All hail the menus", function ()
     spawnmenu.AddToolMenuOption("Utilities", "Xala's Movie Helper", XMH_LANG[_LANG]["client_populate_menu_section6"] , XMH_LANG[_LANG]["client_populate_menu_section6"] , "", "", NPCMovement )
     spawnmenu.AddToolMenuOption("Utilities", "Xala's Movie Helper", XMH_LANG[_LANG]["client_populate_menu_section7"] , XMH_LANG[_LANG]["client_populate_menu_section7"] , "", "", Physics     )
     spawnmenu.AddToolMenuOption("Utilities", "Xala's Movie Helper", XMH_LANG[_LANG]["client_populate_menu_section8"] , XMH_LANG[_LANG]["client_populate_menu_section8"] , "", "", Shadows     )
-    spawnmenu.AddToolMenuOption("Utilities", "Xala's Movie Helper", XMH_LANG[_LANG]["client_populate_menu_section9"] , XMH_LANG[_LANG]["client_populate_menu_section9"] , "", "", Teleport    )
+    spawnmenu.AddToolMenuOption("Utilities", "Xala's Movie Helper", XMH_LANG[_LANG]["client_populate_menu_section9"] , XMH_LANG[_LANG]["client_populate_menu_section9"] , "", "", Position    )
     spawnmenu.AddToolMenuOption("Utilities", "Xala's Movie Helper", XMH_LANG[_LANG]["client_populate_menu_section10"], XMH_LANG[_LANG]["client_populate_menu_section10"], "", "", PlayerView )
     spawnmenu.AddToolMenuOption("Utilities", "Xala's Movie Helper", XMH_LANG[_LANG]["client_populate_menu_section12"], XMH_LANG[_LANG]["client_populate_menu_section12"], "", "", Weapons     )
     spawnmenu.AddToolMenuOption("Utilities", "Xala's Movie Helper", XMH_LANG[_LANG]["client_populate_menu_section11"], XMH_LANG[_LANG]["client_populate_menu_section11"], "", "", Defaults    )

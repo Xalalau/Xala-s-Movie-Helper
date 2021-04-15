@@ -809,7 +809,7 @@ hook.Add("CalcView", "StartFOVSync", function(ply, origin, angles, fov, znear, z
     --   Ignore it if the weapon has a CalcView field
     --   Try to ""detect"" weapons with active zoom by modifying the fov only when it's in the default players range
     local weapon = ply:GetActiveWeapon()
-    if ((IsValid(weapon) or true) and not weapon.CalcView) and fov >= 75 and fov <= 100 then 
+    if (not IsValid(weapon) or not weapon.CalcView) and fov >= 75 and fov <= 100 then 
         -- Cameras
         if ply:GetViewEntity():GetClass() == "gmod_cameraprop" then
             view.fov = GetConVar("xmh_camera_fov"):GetInt()

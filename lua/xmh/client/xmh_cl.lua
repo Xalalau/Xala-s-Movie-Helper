@@ -885,39 +885,6 @@ local function SetSVCheatsMenus(pnl)
     return sv_cheats_menu
 end
 
-local function Informations(Panel)
-    Panel:Help            ("Xala's Movie Helper"                             )
-    if checkAdmin() == true then
-        Panel:ControlHelp (XMH_LANG[_LANG]["client_menu_info_admin_on"       ])
-    else
-        Panel:ControlHelp (XMH_LANG[_LANG]["client_menu_info_admin_off"      ])
-    end
-    Panel:Help            (XMH_LANG[_LANG]["client_menu_info_sv_cheats_msg"  ])
-    Panel:ControlHelp     (XMH_LANG[_LANG]["client_menu_info_sv_cheats_desc" ])
-    Panel:Help            (""                                                )
-    Panel:Help            (XMH_LANG[_LANG]["client_menu_info_tags"           ])
-    if checkAdmin() == true then
-        Panel:ControlHelp (XMH_LANG[_LANG]["client_menu_info_tags_desc_admin"])
-    else
-        Panel:ControlHelp (XMH_LANG[_LANG]["client_menu_info_tags_desc_ply"  ])
-    end
-    Panel:Help            (XMH_LANG[_LANG]["client_menu_info_tags_1"         ])
-    Panel:Help            (XMH_LANG[_LANG]["client_menu_info_tags_2"         ])
-    if checkAdmin() == true then
-        Panel:Help        (XMH_LANG[_LANG]["client_menu_info_tags_3"         ])
-    end
-    Panel:Help            (XMH_LANG[_LANG]["client_menu_info_tags_4"         ])
-    Panel:Help            (XMH_LANG[_LANG]["client_menu_info_tags_5"         ])
-    Panel:Help            (XMH_LANG[_LANG]["client_menu_info_tags_6"         ])
-    Panel:Help            (XMH_LANG[_LANG]["client_menu_info_tags_7"         ])
-    Panel:Help            (""                                                )
-    Panel:Help            (XMH_LANG[_LANG]["client_menu_info_hint_1"         ])
-    Panel:Help            (XMH_LANG[_LANG]["client_menu_info_hint_2"         ])
-    Panel:Help            (""                                                )
-    Panel:Help            (Revision                                          )
-    Panel:ControlHelp     (XMH_LANG[_LANG]["client_menu_info_credits"        ])
-end
-
 local function Cleanup(Panel)
     local sv_cheats_menu = SetSVCheatsMenus(Panel.Header)
 
@@ -940,6 +907,54 @@ local function Cleanup(Panel)
         xmh_menu = Panel:CheckBox (XMH_LANG[_LANG]["client_menu_cleanup_auto"            ], "xmh_cleanup_var")
         xmh_menu:SetTooltip       (XMH_LANG[_LANG]["client_menu_cleanup_auto_desc"       ])
     end
+end
+
+local function Flashlight(Panel)
+    local sv_cheats_menu = SetSVCheatsMenus(Panel.Header)
+
+    xmh_menu = Panel:CheckBox  (XMH_LANG[_LANG]["client_menu_flashlight_lock"           ], "r_flashlightlockposition")
+    table.insert(sv_cheats_menu, xmh_menu)
+    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_flashlight_lock_desc"      ])
+    xmh_menu = Panel:CheckBox  (XMH_LANG[_LANG]["client_menu_flashlight_brightness"     ], "xmh_fullflashlight_var")
+    table.insert(sv_cheats_menu, xmh_menu)
+    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_flashlight_brightness_desc"])
+    xmh_menu = Panel:CheckBox  (XMH_LANG[_LANG]["client_menu_flashlight_area"           ], "r_flashlightdrawfrustum")
+    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_flashlight_area_desc"      ])
+    xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_flashlight_minr"           ], "r_flashlightnear", 1, 1000, 0)
+    table.insert(sv_cheats_menu, xmh_menu)
+    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_flashlight_minr_desc"      ])
+    xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_flashlight_maxr"           ], "r_flashlightfar", 1, 10000, 0)
+    table.insert(sv_cheats_menu, xmh_menu)
+    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_flashlight_maxr_desc"      ])
+    xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_flashlight_fov"            ], "r_flashlightfov", 1, 179, 0)
+    table.insert(sv_cheats_menu, xmh_menu)
+    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_flashlight_fov_desc"       ])
+end
+
+local function General(Panel)
+    local sv_cheats_menu = SetSVCheatsMenus(Panel.Header)
+
+    xmh_menu = Panel:Button    (XMH_LANG[_LANG]["client_menu_general_editor"       ], "xmh_texteditor")
+    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_general_editor_desc"  ])
+    xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_general_fontsize"     ], "xmh_textfont_var", 13, 30, 0)
+    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_general_fontsize_desc"])
+    if not game.SinglePlayer() then
+        xmh_menu = Panel:Button (XMH_LANG[_LANG]["client_menu_general_lipsync"      ], "xmh_lipsync")
+        table.insert(sv_cheats_menu, xmh_menu)
+        xmh_menu:SetTooltip     (XMH_LANG[_LANG]["client_menu_general_lipsync_desc" ])
+    end
+    if (GetConVar("sv_skyname"):GetString() != "painted") then
+        xmh_menu = Panel:CheckBox (XMH_LANG[_LANG]["client_menu_general_green"        ], "xmh_skybox_var")
+        xmh_menu:SetTooltip       (XMH_LANG[_LANG]["client_menu_general_green_desc"   ])
+    end
+    if checkAdmin() == true then
+        xmh_menu = Panel:CheckBox (XMH_LANG[_LANG]["client_menu_general_autosave"     ], "xmh_save_var")
+        xmh_menu:SetTooltip       (XMH_LANG[_LANG]["client_menu_general_autosave_desc"])
+    end
+    xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_general_lod"          ], "r_lod", -1, 5, 0)
+    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_general_lod_desc"     ])
+    xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_general_pupil"        ], "r_eyesize", -0.5, 0.5, 2)
+    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_general_pupil_desc"   ])
 end
 
 local function HideShow(Panel)
@@ -1016,52 +1031,37 @@ local function HideShow(Panel)
     xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_display_detail_desc"      ])
 end
 
-local function Flashlight(Panel)
-    local sv_cheats_menu = SetSVCheatsMenus(Panel.Header)
-
-    xmh_menu = Panel:CheckBox  (XMH_LANG[_LANG]["client_menu_flashlight_lock"           ], "r_flashlightlockposition")
-    table.insert(sv_cheats_menu, xmh_menu)
-    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_flashlight_lock_desc"      ])
-    xmh_menu = Panel:CheckBox  (XMH_LANG[_LANG]["client_menu_flashlight_brightness"     ], "xmh_fullflashlight_var")
-    table.insert(sv_cheats_menu, xmh_menu)
-    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_flashlight_brightness_desc"])
-    xmh_menu = Panel:CheckBox  (XMH_LANG[_LANG]["client_menu_flashlight_area"           ], "r_flashlightdrawfrustum")
-    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_flashlight_area_desc"      ])
-    xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_flashlight_minr"           ], "r_flashlightnear", 1, 1000, 0)
-    table.insert(sv_cheats_menu, xmh_menu)
-    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_flashlight_minr_desc"      ])
-    xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_flashlight_maxr"           ], "r_flashlightfar", 1, 10000, 0)
-    table.insert(sv_cheats_menu, xmh_menu)
-    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_flashlight_maxr_desc"      ])
-    xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_flashlight_fov"            ], "r_flashlightfov", 1, 179, 0)
-    table.insert(sv_cheats_menu, xmh_menu)
-    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_flashlight_fov_desc"       ])
-end
-
-local function General(Panel)
-    local sv_cheats_menu = SetSVCheatsMenus(Panel.Header)
-
-    xmh_menu = Panel:Button    (XMH_LANG[_LANG]["client_menu_general_editor"       ], "xmh_texteditor")
-    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_general_editor_desc"  ])
-    xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_general_fontsize"     ], "xmh_textfont_var", 13, 30, 0)
-    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_general_fontsize_desc"])
-    if not game.SinglePlayer() then
-        xmh_menu = Panel:Button (XMH_LANG[_LANG]["client_menu_general_lipsync"      ], "xmh_lipsync")
-        table.insert(sv_cheats_menu, xmh_menu)
-        xmh_menu:SetTooltip     (XMH_LANG[_LANG]["client_menu_general_lipsync_desc" ])
-    end
-    if (GetConVar("sv_skyname"):GetString() != "painted") then
-        xmh_menu = Panel:CheckBox (XMH_LANG[_LANG]["client_menu_general_green"        ], "xmh_skybox_var")
-        xmh_menu:SetTooltip       (XMH_LANG[_LANG]["client_menu_general_green_desc"   ])
-    end
+local function Informations(Panel)
+    Panel:Help            ("Xala's Movie Helper"                             )
     if checkAdmin() == true then
-        xmh_menu = Panel:CheckBox (XMH_LANG[_LANG]["client_menu_general_autosave"     ], "xmh_save_var")
-        xmh_menu:SetTooltip       (XMH_LANG[_LANG]["client_menu_general_autosave_desc"])
+        Panel:ControlHelp (XMH_LANG[_LANG]["client_menu_info_admin_on"       ])
+    else
+        Panel:ControlHelp (XMH_LANG[_LANG]["client_menu_info_admin_off"      ])
     end
-    xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_general_lod"          ], "r_lod", -1, 5, 0)
-    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_general_lod_desc"     ])
-    xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_general_pupil"        ], "r_eyesize", -0.5, 0.5, 2)
-    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_general_pupil_desc"   ])
+    Panel:Help            (XMH_LANG[_LANG]["client_menu_info_sv_cheats_msg"  ])
+    Panel:ControlHelp     (XMH_LANG[_LANG]["client_menu_info_sv_cheats_desc" ])
+    Panel:Help            (""                                                )
+    Panel:Help            (XMH_LANG[_LANG]["client_menu_info_tags"           ])
+    if checkAdmin() == true then
+        Panel:ControlHelp (XMH_LANG[_LANG]["client_menu_info_tags_desc_admin"])
+    else
+        Panel:ControlHelp (XMH_LANG[_LANG]["client_menu_info_tags_desc_ply"  ])
+    end
+    Panel:Help            (XMH_LANG[_LANG]["client_menu_info_tags_1"         ])
+    Panel:Help            (XMH_LANG[_LANG]["client_menu_info_tags_2"         ])
+    if checkAdmin() == true then
+        Panel:Help        (XMH_LANG[_LANG]["client_menu_info_tags_3"         ])
+    end
+    Panel:Help            (XMH_LANG[_LANG]["client_menu_info_tags_4"         ])
+    Panel:Help            (XMH_LANG[_LANG]["client_menu_info_tags_5"         ])
+    Panel:Help            (XMH_LANG[_LANG]["client_menu_info_tags_6"         ])
+    Panel:Help            (XMH_LANG[_LANG]["client_menu_info_tags_7"         ])
+    Panel:Help            (""                                                )
+    Panel:Help            (XMH_LANG[_LANG]["client_menu_info_hint_1"         ])
+    Panel:Help            (XMH_LANG[_LANG]["client_menu_info_hint_2"         ])
+    Panel:Help            (""                                                )
+    Panel:Help            (Revision                                          )
+    Panel:ControlHelp     (XMH_LANG[_LANG]["client_menu_info_credits"        ])
 end
 
 local function NPCMovement(Panel)
@@ -1137,44 +1137,6 @@ local function Physics(Panel)
     end
 end
 
-local function Shadows(Panel)
-    local sv_cheats_menu = SetSVCheatsMenus(Panel.Header)
-
-    local resolution = XMH_LANG[_LANG]["client_menu_shadows_res_p1"]..GetConVar("r_flashlightdepthres"):GetInt()..XMH_LANG[_LANG]["client_menu_shadows_res_p2"]
-    xmh_menu = Panel:Button(XMH_LANG[_LANG]["client_menu_shadows_res_desc"       ], "xmh_shadowreschk")
-    xmh_menu:SetTooltip(resolution)
-    shadows_combobox = Panel:ComboBox(XMH_LANG[_LANG]["client_menu_shadows_combo"])
-    shadows_combobox:AddChoice("1024 x 1024", "1024")
-    shadows_combobox:AddChoice("2048 x 2048", "2048")
-    shadows_combobox:AddChoice("4096 x 4096", "4096")
-    shadows_combobox:AddChoice("8192 x 8192", "8192")
-    xmh_menu = Panel:Button    (XMH_LANG[_LANG]["client_menu_shadows_change"         ], "xmh_shadowres")
-    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_shadows_change_desc"    ])
-    Panel:ControlHelp          (XMH_LANG[_LANG]["client_menu_shadows_notes"          ])
-    xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_shadows_bleeding"       ], "mat_slopescaledepthbias_shadowmap", 1, 16, 0)
-    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_shadows_bleeding_desc"  ])
-    xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_shadows_blur"           ], "r_projectedtexture_filter", 0, 20, 0)
-    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_shadows_blur_desc"      ])
-    xmh_menu = Panel:CheckBox  (XMH_LANG[_LANG]["client_menu_shadows_brightness"     ], "mat_fullbright")
-    table.insert(sv_cheats_menu, xmh_menu)
-    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_shadows_brightness_desc"])
-    xmh_menu = Panel:CheckBox  (XMH_LANG[_LANG]["client_menu_shadows_match"          ], "r_shadowrendertotexture")
-    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_shadows_match_desc"     ])
-end
-
-local function Teleport(Panel)
-    Panel:TextEntry         (XMH_LANG[_LANG]["client_menu_teleport_name"       ], "xmh_positionname_var")
-    xmh_menu = Panel:Button (XMH_LANG[_LANG]["client_menu_teleport_save"       ], "xmh_saveteleport")
-    xmh_menu:SetTooltip     (XMH_LANG[_LANG]["client_menu_teleport_save_desc"  ])
-    Panel:Help              (""                                                )
-    teleport_combobox = Panel:ComboBox(XMH_LANG[_LANG]["client_menu_teleport_destination"])
-    LoadTeleports()
-    xmh_menu = Panel:Button (XMH_LANG[_LANG]["client_menu_teleport_delete"     ], "xmh_deleteteleportpos")
-    xmh_menu:SetTooltip     (XMH_LANG[_LANG]["client_menu_teleport_delete_desc"])
-    xmh_menu = Panel:Button (XMH_LANG[_LANG]["client_menu_teleport_go"         ], "xmh_teleporttopos")
-    xmh_menu:SetTooltip     (XMH_LANG[_LANG]["client_menu_teleport_go_desc"    ])
-end
-
 local function PlayerView(Panel)
     local sv_cheats_menu = SetSVCheatsMenus(Panel.Header)
     local DCollapsible
@@ -1235,7 +1197,45 @@ local function PlayerView(Panel)
     table.insert(sv_cheats_menu, xmh_menu)
     xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_playerview_spinvel_desc"      ])
 end
- 
+
+local function Shadows(Panel)
+    local sv_cheats_menu = SetSVCheatsMenus(Panel.Header)
+
+    local resolution = XMH_LANG[_LANG]["client_menu_shadows_res_p1"]..GetConVar("r_flashlightdepthres"):GetInt()..XMH_LANG[_LANG]["client_menu_shadows_res_p2"]
+    xmh_menu = Panel:Button(XMH_LANG[_LANG]["client_menu_shadows_res_desc"       ], "xmh_shadowreschk")
+    xmh_menu:SetTooltip(resolution)
+    shadows_combobox = Panel:ComboBox(XMH_LANG[_LANG]["client_menu_shadows_combo"])
+    shadows_combobox:AddChoice("1024 x 1024", "1024")
+    shadows_combobox:AddChoice("2048 x 2048", "2048")
+    shadows_combobox:AddChoice("4096 x 4096", "4096")
+    shadows_combobox:AddChoice("8192 x 8192", "8192")
+    xmh_menu = Panel:Button    (XMH_LANG[_LANG]["client_menu_shadows_change"         ], "xmh_shadowres")
+    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_shadows_change_desc"    ])
+    Panel:ControlHelp          (XMH_LANG[_LANG]["client_menu_shadows_notes"          ])
+    xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_shadows_bleeding"       ], "mat_slopescaledepthbias_shadowmap", 1, 16, 0)
+    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_shadows_bleeding_desc"  ])
+    xmh_menu = Panel:NumSlider (XMH_LANG[_LANG]["client_menu_shadows_blur"           ], "r_projectedtexture_filter", 0, 20, 0)
+    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_shadows_blur_desc"      ])
+    xmh_menu = Panel:CheckBox  (XMH_LANG[_LANG]["client_menu_shadows_brightness"     ], "mat_fullbright")
+    table.insert(sv_cheats_menu, xmh_menu)
+    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_shadows_brightness_desc"])
+    xmh_menu = Panel:CheckBox  (XMH_LANG[_LANG]["client_menu_shadows_match"          ], "r_shadowrendertotexture")
+    xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_shadows_match_desc"     ])
+end
+
+local function Teleport(Panel)
+    Panel:TextEntry         (XMH_LANG[_LANG]["client_menu_teleport_name"       ], "xmh_positionname_var")
+    xmh_menu = Panel:Button (XMH_LANG[_LANG]["client_menu_teleport_save"       ], "xmh_saveteleport")
+    xmh_menu:SetTooltip     (XMH_LANG[_LANG]["client_menu_teleport_save_desc"  ])
+    Panel:Help              (""                                                )
+    teleport_combobox = Panel:ComboBox(XMH_LANG[_LANG]["client_menu_teleport_destination"])
+    LoadTeleports()
+    xmh_menu = Panel:Button (XMH_LANG[_LANG]["client_menu_teleport_delete"     ], "xmh_deleteteleportpos")
+    xmh_menu:SetTooltip     (XMH_LANG[_LANG]["client_menu_teleport_delete_desc"])
+    xmh_menu = Panel:Button (XMH_LANG[_LANG]["client_menu_teleport_go"         ], "xmh_teleporttopos")
+    xmh_menu:SetTooltip     (XMH_LANG[_LANG]["client_menu_teleport_go_desc"    ])
+end
+
 local function Weapons(Panel)
     if checkAdmin() == true and not game.SinglePlayer() then
         xmh_menu = Panel:CheckBox (XMH_LANG[_LANG]["client_menu_weapons_plyall"        ], "xmh_editweaponsallplys_var")

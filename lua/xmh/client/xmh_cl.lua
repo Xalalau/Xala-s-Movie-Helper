@@ -956,6 +956,8 @@ local xmh_menu
 local sv_cheats_menus = {}
 
 local function UpdateSVCheatsMenus(panelName)
+    if not sv_cheats_menus[panelName] then return end
+
     local sv_cheats = GetConVar("sv_cheats"):GetInt() == 1 and true or false
     local cheat_menus_enabled = sv_cheats_menus[panelName][1]:IsEnabled() and true or false
 

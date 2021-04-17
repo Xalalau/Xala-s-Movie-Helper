@@ -973,9 +973,12 @@ local function SetSVCheatsMenus(pnl)
     sv_cheats_menus[panelName] = {}
     local sv_cheats_menu = sv_cheats_menus[panelName]
 
+    -- Disabled because sometimes menus aren't updated until they are scrolled to the top or they simply don't updated
+    --[[
     function pnl:Paint()
         UpdateSVCheatsMenus(panelName)
     end
+    ]]
 
     return sv_cheats_menu
 end

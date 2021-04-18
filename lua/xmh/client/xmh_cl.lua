@@ -107,7 +107,7 @@ local function isLanguageValid(language)
 end
 
 -- Changes missing translations to English
-local function checkLanguage(ply,_,_,language)
+local function checkLanguage(language)
     for k,v in pairs(XMH_LANG["en"]) do
         if not XMH_LANG[language][k] then
             XMH_LANG[language][k] = v

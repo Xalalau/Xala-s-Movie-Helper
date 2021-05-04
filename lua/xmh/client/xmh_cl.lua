@@ -110,6 +110,7 @@ end
 local function checkLanguage(language)
     for k,v in pairs(XMH_LANG["en"]) do
         if not XMH_LANG[language][k] then
+            print("XMH - Warning! Missing " .. k .. " translation for " .. language .. ". Switching to English...")
             XMH_LANG[language][k] = v
         end
     end

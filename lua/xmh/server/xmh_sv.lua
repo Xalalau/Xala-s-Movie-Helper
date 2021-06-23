@@ -602,11 +602,13 @@ net.Receive("XMH_SetRespawn",function(_,ply)
         return
     end
 
-    if not xmh_plys_respawn[plyStr] then
-        xmh_plys_respawn[plyStr] = {}
-    end
+    xmh_plys_respawn[plyStr] = xmh_plys_respawn[plyStr] or {}
 
+    local vec1 = ply:GetEyeTrace().HitPos
+    local vec2 = ply:GetShootPos()
+    
     xmh_plys_respawn[plyStr].x, xmh_plys_respawn[plyStr].y = ply:GetPos()
+    xmh_plys_respawn[plyStr].ang = (vec1 - vec2):Angle()
 end)
 
 -- ---------------------------
@@ -636,6 +638,7 @@ hook.Add("PlayerSpawn", "PlayerSpawn_xmh", function(ply)
     local plyStr = tostring(ply)
     if xmh_plys_respawn[plyStr] then
         ply:SetPos(xmh_plys_respawn[plyStr].x, xmh_plys_respawn[plyStr].y)
+        ply:SetEyeAngles(xmh_plys_respawn[plyStr].ang)
     end
 end)
 

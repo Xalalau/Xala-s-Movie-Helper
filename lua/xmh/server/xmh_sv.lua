@@ -508,7 +508,12 @@ end)
 
 net.Receive("XMH_TeleportPlayer",function(_,ply)
     if ply:IsValid() then
-        ply:SetPos(net.ReadVector())
+        local pos = net.ReadVector()
+        local ang = net.ReadAngle()
+
+        ply:SetPos(pos)
+        ply:SetEyeAngles(ang)
+        ply:SetAngles(ang)
     end
 end)
 
@@ -639,6 +644,7 @@ hook.Add("PlayerSpawn", "PlayerSpawn_xmh", function(ply)
     if xmh_plys_respawn[plyStr] then
         ply:SetPos(xmh_plys_respawn[plyStr].x, xmh_plys_respawn[plyStr].y)
         ply:SetEyeAngles(xmh_plys_respawn[plyStr].ang)
+        ply:SetAngles(xmh_plys_respawn[plyStr].ang)
     end
 end)
 

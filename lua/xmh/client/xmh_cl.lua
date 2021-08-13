@@ -1,6 +1,6 @@
 --[[
    \   XALA'S MOVIE HELPER
- =3 ]]  Revision = "XMH.Rev.25.4 - 13/06/2021 (dd/mm/yyyy)" --[[
+ =3 ]]  Revision = "XMH.Rev.25.5 - 13/08/2021 (dd/mm/yyyy)" --[[
  =o |   License: MIT
    /   Created by: Xalalau Xubilozo
   |
@@ -218,6 +218,7 @@ CreateClientConVar("xmh_positionname_var" ,XMH_LANG[_LANG]["client_var_teleport"
 local function LoadTeleports()
     if file.Exists(xmh_teleports_file, "DATA") then
         teleport_positions = util.JSONToTable(file.Read(xmh_teleports_file, "DATA"))
+
         for k,v in pairs(teleport_positions) do
             teleport_combobox:AddChoice(k)
         end
@@ -228,25 +229,31 @@ end
 local function CreateTeleport(ply)
     if IsValid(ply) then
         local name = GetConVar("xmh_positionname_var"):GetString()
-        if name == "" then
-            return
-        end
+
+        if name == "" then return end
+
         if teleport_positions[name] == nil then
             teleport_combobox:AddChoice(name)
         end
-        teleport_positions[name] = ply:GetPos()
+
+        local vec1 = ply:GetEyeTrace().HitPos
+        local vec2 = ply:GetShootPos()
+
+        teleport_positions[name] = { pos = ply:GetPos(), ang = (vec1 - vec2):Angle() }
+
         file.Write(xmh_teleports_file, util.TableToJSON(teleport_positions))
     end
 end
 
 -- Teleports the player to a point
 local function TeleportToPos()
-    local vec = teleport_positions[getComboBoxSelection(teleport_combobox)]
-    if vec == nil then
-        return
-    end
+    local vecTab = teleport_positions[getComboBoxSelection(teleport_combobox)]
+
+    if vecTab == nil then return end
+
     net.Start       ("XMH_TeleportPlayer")
-    net.WriteVector (vec                 )
+    net.WriteVector (vecTab.pos          )
+    net.WriteAngle  (vecTab.ang          )
     net.SendToServer(                    )
 end
 

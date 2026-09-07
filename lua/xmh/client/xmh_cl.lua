@@ -452,7 +452,7 @@ local function Pedestrians()
     print(XMH_LANG[_LANG]["client_func_pedestrians"])
     print("___________________________________________________________")
     print("")
-    RunConsoleCommand("showconsole")
+    Derma_Message(XMH_LANG[_LANG]["client_func_pedestrians"], "Xala's Movie Helper", "OK")
 end
 
 -- Enables automatic playermodel lipsync
@@ -463,7 +463,7 @@ local function LipSync()
     print(XMH_LANG[_LANG]["client_func_lipsync"])
     print("___________________________________________________________")
     print("")
-    RunConsoleCommand("showconsole")
+    Derma_Message(XMH_LANG[_LANG]["client_func_lipsync"], "Xala's Movie Helper", "OK")
 end
 
 -- Removes the crosshair
@@ -474,7 +474,7 @@ local function HideCrosshair()
     print(XMH_LANG[_LANG]["client_func_crosshair"])
     print("___________________________________________________________")
     print("")
-    RunConsoleCommand("showconsole")
+    Derma_Message(XMH_LANG[_LANG]["client_func_crosshair"], "Xala's Movie Helper", "OK")
 end
 
 -- Shows the current shadows resolution
@@ -485,7 +485,7 @@ local function ShadowResChk()
     print("")
     print(aux)
     print("___________________________________________________________")
-    RunConsoleCommand("showconsole")
+    Derma_Message(aux, "Xala's Movie Helper", "OK")
 end
 
 -- Changes the shadows resolution

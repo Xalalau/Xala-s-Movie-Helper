@@ -555,13 +555,6 @@ xmh_commands = {
     cheat           = true,
     admin           = false
   },
-  ["r_shadowrendertotexture"] = {
-    command_type    = "runconsolecommand",
-    category        = "Shadows",
-    default         = GetConVar("r_shadowrendertotexture"):GetInt(),
-    cheat           = false,
-    admin           = false
-  },
   -- ##################### PLAYER VIEW
   ["xmh_shake_var"] = {
     command_type    = "function",

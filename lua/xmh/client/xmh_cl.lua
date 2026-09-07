@@ -1323,8 +1323,14 @@ local function Shadows(Panel)
     xmh_menu = Panel:CheckBox  (XMH_LANG[_LANG]["client_menu_shadows_brightness"     ], "mat_fullbright")
     table.insert(sv_cheats_menu, xmh_menu)
     xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_shadows_brightness_desc"])
-    xmh_menu = Panel:CheckBox  (XMH_LANG[_LANG]["client_menu_shadows_match"          ], "r_shadowrendertotexture")
+    -- This engine setting is blocked from Lua, including Derma's ConVar bindings.
+    xmh_menu = Panel:Button    (XMH_LANG[_LANG]["client_menu_shadows_match"          ])
     xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_shadows_match_desc"     ])
+    xmh_menu.DoClick = function()
+        local message = string.format(XMH_LANG[_LANG]["client_menu_shadows_match_manual"], GetConVar("r_shadowrendertotexture"):GetInt())
+        print(message)
+        Derma_Message(message, "Xala's Movie Helper", "OK")
+    end
 end
 
 local function Position(Panel)

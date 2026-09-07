@@ -1,6 +1,6 @@
 --[[
    \   XALA'S MOVIE HELPER
- =3 ]]  Revision = "XMH.Rev.25.5 - 13/08/2021 (dd/mm/yyyy)" --[[
+ =3 ]]  Revision = "XMH.Rev.25.6 - 07/09/2026 (dd/mm/yyyy)" --[[
  =o |   License: MIT
    /   Created by: Xalalau Xubilozo
   |

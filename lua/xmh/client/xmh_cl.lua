@@ -490,13 +490,17 @@ end
 
 -- Changes the shadows resolution
 function ShadowRes()
-    opt = getComboBoxSelection(shadows_combobox)
-    print(opt)
-    if opt == nil then
+    local resolution
+    if IsValid(shadows_combobox) then
+        local _, data = shadows_combobox:GetSelected()
+        resolution = data
+    end
+    if resolution != "1024" and resolution != "2048" and resolution != "4096" and resolution != "8192" then
+        Derma_Message(XMH_LANG[_LANG]["client_menu_shadows_select_resolution"], "Xala's Movie Helper", "OK")
         return
     end
-    if (opt != "0" and opt != GetConVar("r_flashlightdepthres"):GetString()) then
-        RunConsoleCommand("r_flashlightdepthres", opt)
+    if resolution != GetConVar("r_flashlightdepthres"):GetString() then
+        RunConsoleCommand("r_flashlightdepthres", resolution)
     end
 end
 
@@ -1309,10 +1313,9 @@ local function Shadows(Panel)
     xmh_menu = Panel:Button(XMH_LANG[_LANG]["client_menu_shadows_res_desc"       ], "xmh_shadowreschk")
     xmh_menu:SetTooltip(resolution)
     shadows_combobox = Panel:ComboBox(XMH_LANG[_LANG]["client_menu_shadows_combo"])
-    shadows_combobox:AddChoice("1024 x 1024", "1024")
-    shadows_combobox:AddChoice("2048 x 2048", "2048")
-    shadows_combobox:AddChoice("4096 x 4096", "4096")
-    shadows_combobox:AddChoice("8192 x 8192", "8192")
+    for _, size in ipairs({"1024", "2048", "4096", "8192"}) do
+        shadows_combobox:AddChoice(size .. " x " .. size, size, size == GetConVar("r_flashlightdepthres"):GetString())
+    end
     xmh_menu = Panel:Button    (XMH_LANG[_LANG]["client_menu_shadows_change"         ], "xmh_shadowres")
     xmh_menu:SetTooltip        (XMH_LANG[_LANG]["client_menu_shadows_change_desc"    ])
     Panel:ControlHelp          (XMH_LANG[_LANG]["client_menu_shadows_notes"          ])

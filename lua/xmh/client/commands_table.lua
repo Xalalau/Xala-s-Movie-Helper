@@ -573,12 +573,11 @@ xmh_commands = {
     admin           = false
   },
   ["xmh_fov_var"] = {
-    command_type    = "function",
+    -- CalcView reads this ConVar directly; its value is not a console command.
+    command_type    = "runconsolecommand",
     category        = "PlayerView",
     default         = GetConVar("xmh_fov_var"):GetInt(),
-    value           = GetConVar("xmh_fov_var"):GetInt(),
     cheat           = true,
-    func            = XMH_RunCommand,
     admin           = false
   },
   ["xmh_fov_unlock_var"] = {

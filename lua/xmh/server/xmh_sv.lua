@@ -10,8 +10,8 @@
 -- "xmh_" cvars syncing table
 -- ---------------------------
 
-CreateConVar("xmh_aidisable_var", 0, false, false)
-CreateConVar("xmh_toolgunmute_var", 1, false, false)
+CreateConVar("xmh_aidisable_var", 0)
+CreateConVar("xmh_toolgunmute_var", 1)
 
 -- These custon client cvars need to have a single value between all players, so they are stored/synced here!
 

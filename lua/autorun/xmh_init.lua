@@ -23,7 +23,7 @@ if SERVER then
     AddCSLuaFile()
     AddCSLuaFile("xmh/client/xmh_cl.lua"         )
     AddCSLuaFile("xmh/client/commands_table.lua" )
-    AddCSLuaFile("xmh/client/modules/XMHText.lua")
+    AddCSLuaFile("xmh/client/modules/xmhtext.lua")
     AddCSLuaFile("xmh/language.lua")
   
   -- Starts the server side
@@ -50,7 +50,7 @@ if CLIENT then
   end
 
   -- Loads the XMHText
-  include("xmh/client/modules/XMHText.lua")
+  include("xmh/client/modules/xmhtext.lua")
   
   -- Starts the client side
   include("xmh/client/xmh_cl.lua")
